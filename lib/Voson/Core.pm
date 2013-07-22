@@ -16,11 +16,6 @@ sub new {
     return $self;
 }
 
-sub register_dsl {
-    my ($self, $name, $code) = @_;
-    $self->{DSL}{$name} = $code;
-}
-
 sub load_plugins {
     my $self = shift;
     my @plugins = ('Basic', @{$self->{plugins}});
