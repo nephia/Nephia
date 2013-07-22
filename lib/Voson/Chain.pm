@@ -1,4 +1,4 @@
-package Voson::ActionChain;
+package Voson::Chain;
 use strict;
 use warnings;
 

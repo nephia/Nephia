@@ -4,7 +4,7 @@ use warnings;
 use Voson::Request;
 use Voson::Response;
 use Voson::Context;
-use Voson::ActionChain;
+use Voson::Chain;
 use Scalar::Util ();
 use Module::Load ();
 
@@ -12,8 +12,8 @@ sub new {
     my ($class, %opts) = @_;
     $opts{caller}  ||= caller();
     $opts{plugins} ||= [];
-    $opts{action_chain} = Voson::ActionChain->new;
-    $opts{filter_chain} = Voson::ActionChain->new;
+    $opts{action_chain} = Voson::Chain->new;
+    $opts{filter_chain} = Voson::Chain->new;
     my $self = bless {%opts}, $class;
     $self->action_chain->append($class->can('action'));
     $self->{loaded_plugins} = [ $self->load_plugins ];
