@@ -9,7 +9,6 @@ use HTTP::Request::Common;
     package Voson::Plugin::HookTester;
     use parent 'Voson::Plugin';
     use Plack::Request;
-    our $CNT = 0;
 
     sub new {
         my ($class, %opts) = @_;
