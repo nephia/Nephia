@@ -42,6 +42,9 @@
       },
       "runtime" : {
          "requires" : {
+            "Module::Load" : "0",
+            "Plack" : "0",
+            "Scalar::Util" : "0",
             "perl" : "5.008005"
          }
       },
