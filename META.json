@@ -1,5 +1,5 @@
 {
-   "abstract" : "It's new $module",
+   "abstract" : "A mini-sized WAF that aimed to substitute for Nephia",
    "author" : [
       "ytnobody <ytnobody@gmail.com>"
    ],
@@ -52,5 +52,16 @@
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/ytnobody/Voson/issues"
+      },
+      "homepage" : "https://github.com/ytnobody/Voson",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/ytnobody/Voson.git",
+         "web" : "https://github.com/ytnobody/Voson"
+      }
+   },
    "version" : "0.01"
 }

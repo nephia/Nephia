@@ -1,6 +1,6 @@
 # NAME
 
-Voson - It's new $module
+Voson - A mini-sized WAF that aimed to substitute for Nephia
 
 # SYNOPSIS
 
