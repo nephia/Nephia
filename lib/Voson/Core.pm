@@ -22,7 +22,7 @@ sub new {
 
 sub load_plugins {
     my $self = shift;
-    my @plugins = ('Basic', @{$self->{plugins}});
+    my @plugins = (qw/Basic Cookie/, @{$self->{plugins}});
     my @rtn;
     while ($plugins[0]) {
         my $plugin_class = 'Voson::Plugin::'. shift(@plugins);
