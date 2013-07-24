@@ -13,8 +13,8 @@ sub new {
     my ($class, %opts) = @_;
     my $self = $class->SUPER::new(%opts);
     my $app = $self->app;
-    $app->action_chain->prepend($self->can('eat_cookie'));
-    $app->action_chain->append($self->can('imprint_cookie'));
+    $app->action_chain->prepend(CookieEater => $self->can('eat_cookie'));
+    $app->action_chain->append(CookieImprinter => $self->can('imprint_cookie'));
     return $self;
 }
 

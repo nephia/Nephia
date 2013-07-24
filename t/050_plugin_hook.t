@@ -13,9 +13,9 @@ use HTTP::Request::Common;
     sub new {
         my ($class, %opts) = @_;
         my $self = $class->SUPER::new(%opts);
-        $self->app->action_chain->prepend($self->can('before_action'));
-        $self->app->action_chain->append($self->can('after_action'));
-        $self->app->filter_chain->append($self->can('modify_body'));
+        $self->app->action_chain->prepend('HookTest::ActionPrepend' => $self->can('before_action'));
+        $self->app->action_chain->append('HookTest::ActionAppend' => $self->can('after_action'));
+        $self->app->filter_chain->append('HookTest::FilterAppend' => $self->can('modify_body'));
         return $self;
     }
 

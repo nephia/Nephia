@@ -15,7 +15,7 @@ sub new {
     $opts{action_chain} = Voson::Chain->new;
     $opts{filter_chain} = Voson::Chain->new;
     my $self = bless {%opts}, $class;
-    $self->action_chain->append($class->can('action'));
+    $self->action_chain->append(Core => $class->can('action'));
     $self->{loaded_plugins} = [ $self->load_plugins ];
     return $self;
 }
