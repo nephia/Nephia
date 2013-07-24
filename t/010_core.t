@@ -9,7 +9,7 @@ my $v = Voson::Core->new(
     appname => 'MyApp',
     app => sub {
         my $name = param('name') || 'tonkichi';
-        [200, [], ["Hello, $name"]];
+        [200,[],"Hello, $name"];
     },
 );
 
