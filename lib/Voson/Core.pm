@@ -14,11 +14,47 @@ sub new {
     $opts{plugins} ||= [];
     $opts{action_chain} = Voson::Chain->new;
     $opts{filter_chain} = Voson::Chain->new;
+    $opts{dsl} = {};
     my $self = bless {%opts}, $class;
     $self->action_chain->append(Core => $class->can('action'));
     $self->{loaded_plugins} = [ $self->load_plugins ];
     return $self;
 }
+
+sub export_dsl {
+    my $self = shift; 
+    my $dummy_context = Voson::Context->new;
+    $self->load_dsl($dummy_context);
+    my $class = $self->caller_class;
+    no strict   qw/refs subs/;
+    no warnings qw/redefine/;
+    *{$class.'::run'} = sub ()  { $self->run };
+    *{$class.'::app'} = sub (&) {
+        my $app = shift;
+        $self->{app} = $app;
+    };
+}
+
+sub incognito {
+    my ($class, %opts) = @_;
+    $opts{caller}  ||= caller();
+    my $instance = $class->new(%opts);
+    my $namespace = $class->_incognito_namespace;
+    {
+        no strict 'refs';
+        $$namespace = $instance;
+    };
+    return $namespace;
+}
+
+sub unmask {
+    my $class = shift;
+    no strict 'refs';
+    my $namespace = $class->_incognito_namespace;
+    return $$namespace;
+}
+
+sub _incognito_namespace { 'Voson::Incognito::'. $$ }
 
 sub load_plugins {
     my $self = shift;
@@ -80,7 +116,10 @@ sub load_dsl {
     no strict   qw/refs subs/;
     no warnings qw/redefine/;
     for my $plugin ($self->loaded_plugins) {
-        *{$class.'::'.$_} = $plugin->$_($context) for $plugin->exports;
+        for my $dsl ($plugin->exports) {
+            *{$class.'::'.$dsl} = $plugin->$dsl($context);
+            $self->{dsl}{$dsl} = $plugin->$dsl($context);
+        }
     }
 }
 

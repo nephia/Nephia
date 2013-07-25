@@ -2,10 +2,21 @@ package Voson;
 use 5.008005;
 use strict;
 use warnings;
+use Voson::Core;
+use Voson::Context;
 
 our $VERSION = "0.01";
 
+sub import {
+    my ($class, %opts) = @_;
+    my $caller = caller;
+    Voson::Core->incognito(%opts, caller => $caller);
+    Voson::Core->unmask->export_dsl;   
+}
 
+sub run {
+    Voson::Core->unmask->run;
+}
 
 1;
 __END__

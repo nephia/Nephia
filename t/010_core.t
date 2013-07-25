@@ -5,7 +5,7 @@ use Voson::Core;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $v = Voson::Core->new(
+Voson::Core->incognito(
     appname => 'MyApp',
     app => sub {
         my $name = param('name') || 'tonkichi';
@@ -13,6 +13,7 @@ my $v = Voson::Core->new(
     },
 );
 
+my $v = Voson::Core->unmask;
 my $app = $v->run;
 
 subtest default => sub {
