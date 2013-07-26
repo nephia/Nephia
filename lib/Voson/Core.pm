@@ -14,7 +14,7 @@ sub new {
     $opts{plugins}      ||= [];
     $opts{action_chain}   = Voson::Chain->new;
     $opts{filter_chain}   = Voson::Chain->new;
-    $opts{loaded_plugins} = [];
+    $opts{loaded_plugins} = Voson::Chain->new;
     $opts{dsl}            = {};
     my $self = bless {%opts}, $class;
     $self->action_chain->append(Core => $class->can('action'));
@@ -67,13 +67,13 @@ sub load_plugins {
         if ($plugins[0]) {
             $conf = shift(@plugins) if ref($plugins[0]) eq 'HASH';
         }
-        push @{$self->{loaded_plugins}}, $self->_load_plugin($plugin_class, $conf);
+        $self->loaded_plugins->append($self->_load_plugin($plugin_class, $conf));
     }
 }
 
 sub loaded_plugins {
     my $self = shift;
-    return @{$self->{loaded_plugins}};
+    return wantarray ? $self->{loaded_plugins}->as_array : $self->{loaded_plugins};
 }
 
 sub _load_plugin {
@@ -115,7 +115,7 @@ sub load_dsl {
     my $class = $self->caller_class;
     no strict   qw/refs subs/;
     no warnings qw/redefine/;
-    for my $plugin ($self->loaded_plugins) {
+    for my $plugin ( @{$self->loaded_plugins} ) {
         for my $dsl ($plugin->exports) {
             *{$class.'::'.$dsl} = $plugin->$dsl($context);
             $self->{dsl}{$dsl} = $plugin->$dsl($context);
