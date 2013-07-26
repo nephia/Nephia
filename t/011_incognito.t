@@ -1,18 +1,18 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Core;
+use Voson::Incognito;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $v = Voson::Core->new(
-    appname => 'MyApp',
+Voson::Incognito->incognito(
     app => sub {
         my $name = param('name') || 'tonkichi';
         [200,[],"Hello, $name"];
     },
 );
 
+my $v = Voson::Incognito->unmask;
 my $app = $v->run;
 
 subtest default => sub {

@@ -36,33 +36,6 @@ sub export_dsl {
     };
 }
 
-sub incognito {
-    my ($class, %opts) = @_;
-    $opts{caller}  ||= caller();
-    my $instance = $class->new(%opts);
-    $instance->export_dsl;
-    my $namespace = $class->_incognito_namespace($instance->caller_class);
-    {
-        no strict;
-        no warnings;
-        ${"$namespace"} = $instance;
-    };
-    return $namespace;
-}
-
-sub unmask {
-    my $class = shift;
-    my $appname = shift || caller();
-    no strict 'refs';
-    my $namespace = $class->_incognito_namespace($appname);
-    return $$namespace;
-}
-
-sub _incognito_namespace { 
-    my ($class, $appname) = @_;
-    'Voson::Incognito::'.$appname.'::'. $$
-} 
-
 sub load_plugins {
     my $self = shift;
     my @plugins = (qw/Basic Cookie/, @{$self->{plugins}});
