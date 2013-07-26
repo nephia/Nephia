@@ -43,9 +43,9 @@ sub incognito {
     $instance->export_dsl;
     my $namespace = $class->_incognito_namespace($instance->caller_class);
     {
-        no strict   qw/refs vars/;
-        no warnings qw/redefine/;
-        $$namespace = $instance;
+        no strict;
+        no warnings;
+        ${"$namespace"} = $instance;
     };
     return $namespace;
 }
