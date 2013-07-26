@@ -39,6 +39,7 @@ sub incognito {
     my ($class, %opts) = @_;
     $opts{caller}  ||= caller();
     my $instance = $class->new(%opts);
+    $instance->export_dsl;
     my $namespace = $class->_incognito_namespace;
     {
         no strict 'refs';

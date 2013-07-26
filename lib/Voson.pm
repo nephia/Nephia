@@ -11,7 +11,6 @@ sub import {
     my ($class, %opts) = @_;
     my $caller = caller;
     Voson::Core->incognito(%opts, caller => $caller);
-    Voson::Core->unmask->export_dsl;   
 }
 
 sub run {
