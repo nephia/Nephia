@@ -10,14 +10,15 @@ use Module::Load ();
 
 sub new {
     my ($class, %opts) = @_;
-    $opts{caller}  ||= caller();
-    $opts{plugins} ||= [];
-    $opts{action_chain} = Voson::Chain->new;
-    $opts{filter_chain} = Voson::Chain->new;
-    $opts{dsl} = {};
+    $opts{caller}       ||= caller();
+    $opts{plugins}      ||= [];
+    $opts{action_chain}   = Voson::Chain->new;
+    $opts{filter_chain}   = Voson::Chain->new;
+    $opts{loaded_plugins} = [];
+    $opts{dsl}            = {};
     my $self = bless {%opts}, $class;
     $self->action_chain->append(Core => $class->can('action'));
-    $self->{loaded_plugins} = [ $self->load_plugins ];
+    $self->load_plugins;
     return $self;
 }
 
@@ -60,16 +61,14 @@ sub _incognito_namespace { 'Voson::Incognito::'. $$ }
 sub load_plugins {
     my $self = shift;
     my @plugins = (qw/Basic Cookie/, @{$self->{plugins}});
-    my @rtn;
     while ($plugins[0]) {
         my $plugin_class = 'Voson::Plugin::'. shift(@plugins);
         my $conf = {};
         if ($plugins[0]) {
             $conf = shift(@plugins) if ref($plugins[0]) eq 'HASH';
         }
-        push @rtn, $self->_load_plugin($plugin_class, $conf);
+        push @{$self->{loaded_plugins}}, $self->_load_plugin($plugin_class, $conf);
     }
-    return @rtn;
 }
 
 sub loaded_plugins {
