@@ -17,7 +17,9 @@ sub handle_hash {
     my ($app, $context) = @_;
     my $res = $context->get('res');
     if (ref($res) eq 'HASH') {
-        $res = $app->{hash_handler}->($res);
+        my $handler = $app->{hash_handler};
+        $handler = $app->{dsl}{$handler} unless ref($handler) eq 'CODE';
+        $res = $handler->($res);
         $context->set(res => $res);
     }
     return $context;

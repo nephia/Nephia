@@ -40,8 +40,9 @@ sub index {
     my ($self, $name) = @_;
     return 0 if $name eq 'Head';
     return $self->size - 1 if $name eq 'Tail';
+    my $normalized_name = $self->_normalize_name($name);
     for my $i (0 .. $self->size -1) {
-        return $i if $self->{chain}[$i]->isa($self->_normalize_name($name));
+        return $i if $self->{chain}[$i]->isa($normalized_name);
     }
 }
 
