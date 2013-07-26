@@ -34,7 +34,7 @@ subtest normal => sub {
 
 subtest failure => sub {
     my $chain = Voson::Chain->new;
-    throws_ok { $chain->append(foo => sub {'bar'}, 'hoge') } qr/^odd number parameters are specified/;
+    throws_ok { $chain->append(foo => sub {'bar'}, 'hoge') } qr/^code for hoge is undefined/;
     dies_ok { $chain->append(foo => sub {'bar'}, 'hoge') } 'say error and die';
 };
 

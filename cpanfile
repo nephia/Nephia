@@ -6,7 +6,7 @@ requires 'Plack';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
-    requires 'Test::Exceptions';
+    requires 'Test::Exception';
     requires 'JSON';
 };
 
