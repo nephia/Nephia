@@ -5,8 +5,10 @@ use Carp;
 use Scalar::Util ();
 
 sub new {
-    my $class = shift;
-    bless [], $class;
+    my ($class, %opts) = @_;
+    $opts{namespace}      = $class.'::Item' unless defined $opts{namespace};
+    $opts{name_normalize} = 1 unless defined $opts{name_normalize};
+    bless {chain => [], %opts}, $class;
 }
 
 sub append {
@@ -29,18 +31,23 @@ sub after {
     $self->_inject($search, 1, @opts);
 }
 
+sub size {
+    my $self = shift;
+    return scalar( @{$self->{chain}} );
+}
+
 sub index {
     my ($self, $name) = @_;
     return 0 if $name eq 'Head';
-    return $#{$self} if $name eq 'Tail';
-    for my $i (0 .. $#{$self}) {
-        return $i if $self->[$i]->isa($self->_normalize_name($name));
+    return $self->size - 1 if $name eq 'Tail';
+    for my $i (0 .. $self->size -1) {
+        return $i if $self->{chain}[$i]->isa($self->_normalize_name($name));
     }
 }
 
 sub as_array {
     my $self = shift;
-    return @$self;
+    return @{$self->{chain}};
 }
 
 sub _inject {
@@ -49,7 +56,7 @@ sub _inject {
     my $index  = $self->index($search);
     $index += $after;
     my @actions = $self->_bless_actions(@opts);
-    splice @$self, $index, 0, @actions;
+    splice @{$self->{chain}}, $index, 0, @actions;
 }
 
 sub _validate_action_opts {
@@ -72,8 +79,10 @@ sub _check_duplicates {
 
 sub _normalize_name {
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
-    my ($self, $name) = @_;;
-    return "Voson::Chain::Item::$name";
+    my ($self, $name) = @_;
+    return $name unless $self->{name_normalize};
+    my $namespace = $self->{namespace};
+    return $namespace.'::'.$name;
 }
 
 sub _bless_actions {
