@@ -41,9 +41,10 @@ sub incognito {
     $opts{caller}  ||= caller();
     my $instance = $class->new(%opts);
     $instance->export_dsl;
-    my $namespace = $class->_incognito_namespace;
+    my $namespace = $class->_incognito_namespace($instance->caller_class);
     {
-        no strict 'refs';
+        no strict   qw/refs vars/;
+        no warnings qw/redefine/;
         $$namespace = $instance;
     };
     return $namespace;
@@ -51,12 +52,16 @@ sub incognito {
 
 sub unmask {
     my $class = shift;
+    my $appname = shift || caller();
     no strict 'refs';
-    my $namespace = $class->_incognito_namespace;
+    my $namespace = $class->_incognito_namespace($appname);
     return $$namespace;
 }
 
-sub _incognito_namespace { 'Voson::Incognito::'. $$ }
+sub _incognito_namespace { 
+    my ($class, $appname) = @_;
+    'Voson::Incognito::'.$appname.'::'. $$
+} 
 
 sub load_plugins {
     my $self = shift;

@@ -14,7 +14,8 @@ sub import {
 }
 
 sub run {
-    Voson::Core->unmask->run;
+    my $caller = caller;
+    Voson::Core->unmask($caller)->run;
 }
 
 1;

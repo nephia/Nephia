@@ -3,10 +3,10 @@ requires 'Scalar::Util';
 requires 'Module::Load';
 requires 'Router::Simple';
 requires 'Plack';
+requires 'JSON';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
     requires 'Test::Exception';
-    requires 'JSON';
 };
 
