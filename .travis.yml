@@ -6,4 +6,4 @@ perl:
 before_install:
   cpanm -n Devel::Cover::Report::Coveralls
 script:
-  perl Build.PL && ./Build build && ./Build test && HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,inc" PERL5LIB="lib" prove t/*.t && cover -report coveralls
+  perl Build.PL && ./Build build && ./Build test t/psgi && HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,inc" PERL5LIB="lib" prove t/model && cover -report coveralls
