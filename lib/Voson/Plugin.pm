@@ -5,7 +5,6 @@ use Carp;
 
 sub new {
     my ($class, %opts) = @_;
-    warn 'do not use Voson::Plugin directly' if $class eq 'Voson::Plugin';
     $class->check_needs($opts{app});
     return bless {%opts}, $class;
 }
@@ -17,7 +16,6 @@ sub app {
 
 sub exports {
     my $self = shift;
-    warn 'do not use Voson::Plugin directly' if ref($self) eq 'Voson::Plugin';
     return ();
 }
 
