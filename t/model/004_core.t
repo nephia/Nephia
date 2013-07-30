@@ -19,6 +19,7 @@ subtest normal => sub {
     isa_ok $v->loaded_plugins, 'Voson::Chain';
     isa_ok $v->action_chain, 'Voson::Chain';
     isa_ok $v->filter_chain, 'Voson::Chain';
+    is $v->dsl, $v->{dsl};
     is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Voson::Plugin::Basic Voson::Plugin::Cookie]], 'Basic and Cookie plugins loaded';
     is $v->app, $app;
 

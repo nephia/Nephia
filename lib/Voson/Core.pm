@@ -88,6 +88,11 @@ sub action {
     return $context;
 }
 
+sub dsl {
+    my ($self, $key) = @_;
+    return $key ? $self->{dsl}{$key} : $self->{dsl};
+}
+
 sub load_dsl {
     my ($self, $context) = @_;
     my $class = $self->caller_class;
