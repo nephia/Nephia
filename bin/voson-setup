@@ -1,0 +1,21 @@
+#!perl
+use strict;
+use warnings;
+use Voson::Setup;
+
+my $appname = shift(@ARGV);
+help() unless $appname;
+
+my $setup = Voson::Setup->new(appname => $appname, plugins => ['Basic']);
+$setup->do_task;
+
+sub help {
+    my $data = join('', (<DATA>));
+    print $data."\n";
+    exit;
+}
+
+__DATA__
+Usage:
+
+ voson-setup AppName [options]
