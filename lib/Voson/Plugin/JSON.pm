@@ -2,13 +2,13 @@ package Voson::Plugin::JSON;
 use strict;
 use warnings;
 use parent 'Voson::Plugin';
-use JSON ();
+use JSON::Tiny ();
 
 sub new {
     my ($class, %opts) = @_;
     my $self = $class->SUPER::new(%opts);
     my $app = $self->app;
-    $app->{json_obj} = JSON->new->utf8;
+    $app->{json_obj} = JSON::Tiny->new;
     return $self;
 }
 

@@ -42,7 +42,7 @@
       },
       "runtime" : {
          "requires" : {
-            "JSON" : "0",
+            "JSON::Tiny" : "0",
             "Module::Load" : "0",
             "Plack" : "0",
             "Router::Simple" : "0",
