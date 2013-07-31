@@ -1,9 +1,16 @@
 language: perl
+
 perl:
   - 5.12
   - 5.14
   - 5.16
-before_install:
-  cpanm -n Devel::Cover::Report::Coveralls
+  - 5.18
+
 script:
-  perl Build.PL && ./Build build && ./Build test t/psgi && cover -delete && HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,inc" PERL5LIB="lib" prove t/model && cover -report coveralls
+  perl Build.PL && ./Build build && ./Build test t/psgi
+
+after_success:
+  - cpanm --quiet --notest --skip-satisfied Devel::Cover::Report::Coveralls
+  - cover -delete 
+  - HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,inc" PERL5LIB="lib" prove t/model 
+  - cover -report coveralls
