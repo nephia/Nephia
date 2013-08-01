@@ -5,7 +5,6 @@ use File::Spec;
 use File::Basename 'dirname';
 use Data::Section::Simple;
 use Module::Load ();
-use Carp;
 use Voson::Chain;
 use Voson::Context;
 
@@ -105,8 +104,8 @@ sub makepath {
     while ( ! -d $path ) {
         my $_path = File::Spec->catdir($self->approot, @in_path[0..$level]);
         unless (-d $_path) {
-            $self->diag("Create directory $_path");
-            mkdir $_path or croak "could not create path $path. $!";
+            $self->diag("Create directory %s", $_path);
+            mkdir $_path or $self->stop("could not create path %s - %s", $path, $!);
         }
         $level++;
     }
@@ -119,8 +118,11 @@ sub spew {
     my @in_path  = @_;
     my $path     = File::Spec->catfile($self->approot, @in_path, $filename);
     $self->makepath( @in_path );
-    $self->diag("Create file $path");
-    open my $fh, '>', $path or croak $!;
+    if (-e $path) {
+        return;
+    }
+    $self->diag('Create file %s', $path);
+    open my $fh, '>', $path or $self->stop("could not open file %s - %s", $path, $!);
     print $fh $data;
     close $fh;
 }
@@ -130,7 +132,7 @@ sub process_template {
     my $c = $self; ### for template
     while (my ($code) = $data =~ /\{\{(.*?)\}\}/) {
         my $replace = eval "$code";
-        croak $@ if $@;
+        $self->stop($@) if $@;
         $data =~ s/\{\{(.*?)\}\}/$replace/x;
     }
     return $data;
@@ -138,29 +140,43 @@ sub process_template {
 
 sub do_task {
     my $self = shift;
-    $self->diag("Begin to setup ".$self->appname);
+    $self->diag("\033[44m\033[1;36mBegin to setup %s\033[0m", $self->appname);
     my $context = Voson::Context->new(
         data_section => sub { Data::Section::Simple->new($_[0]) },
     );
     $self->{nest}++;
     for my $action ( $self->action_chain ) {
-        $self->diag("[Action] ". ref($action));
+        my $name = ref($action);
+        $self->diag("\033[1;34m[Action]\033[0m \033[0;35m%s\033[0m - provided by \033[0;32m%s\033[0m", $name, $self->action_chain->from($name));
         $self->{nest}++;
         $context = $action->($self, $context);
         $self->{nest}--;
         $self->diag("Done.");
     }
     $self->{nest}--;
-    $self->diag("Setup finished.");
+    $self->diag("\033[44m\033[1;36mSetup finished.\033[0m");
 }
 
 sub diag {
-    my ($self, $str) = @_;
+    my ($self, $str, @params) = @_;
+    my $spaces = $self->_spaces_for_nest;
+    printf STDERR $spaces.$str."\n", @params;
+}
+
+sub stop {
+    my ($self, $str, @params) = @_;
+    my $spaces = $self->_spaces_for_nest;
+    printf STDERR $spaces."\033[41m\033[1;33m[! SETUP STOPPED !]\033[0m \033[1;31m".$str."\033[0m\n", @params;
+    exit;
+}
+
+sub _spaces_for_nest {
+    my $self = shift;
     my $spaces = '';
     if ($self->{nest}) {
         $spaces .= ' ' for 1 .. $self->{nest} * 2
     }
-    print STDERR $spaces.$str."\n";
+    return $spaces;
 }
 
 sub load_plugins {

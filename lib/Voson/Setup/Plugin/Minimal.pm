@@ -2,6 +2,7 @@ package Voson::Setup::Plugin::Minimal;
 use strict;
 use warnings;
 use parent 'Voson::Setup::Plugin';
+use File::Spec;
 
 sub fix_setup {
     my ($self) = @_;
@@ -16,6 +17,8 @@ sub fix_setup {
 
 sub create_project {
     my ($setup, $context) = @_;
+    my $path = File::Spec->catdir($setup->approot);
+    $setup->stop("Project directory %s already exists.", $path) if -d $path;
     $setup->makepath();
     return $context;
 }

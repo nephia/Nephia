@@ -103,7 +103,7 @@ sub _normalize_name {
     my ($self, $name) = @_;
     return $name unless $self->{name_normalize};
     my $namespace = $self->{namespace};
-    return $namespace.'::'.$name;
+    return $name =~ /^$namespace\:\:/ ? $name : $namespace.'::'.$name;
 }
 
 sub _bless_actions {
