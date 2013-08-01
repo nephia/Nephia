@@ -17,6 +17,7 @@ sub new {
     $opts{action_chain}   = Voson::Chain->new(namespace => 'Voson::Setup::Action');
     $opts{plugins}      ||= [];
     $opts{options}      ||= {};
+    $opts{deps}         ||= $class->_build_deps;
     my $self = bless {%opts}, $class;
     $self->load_plugins;
     return $self
@@ -39,6 +40,39 @@ sub _resolve_classfile {
     return ['lib', split('::', $appname.'.pm')];
 }
 
+sub _build_deps {
+    {
+        requires => ['Voson' => 0],
+        test => {
+            requires => ['Test::More' => 0],
+        },
+    };
+}
+
+sub _deparse_deps {
+    my $nest_level = shift;
+    my $nest = $nest_level > 0 ? join('', map{' '} 1 .. $nest_level*4) : '';
+    my %val = @_;
+    my $data = "";
+    for my $key (keys %val) {
+        my $v = $val{$key};
+        if (ref($v) eq 'ARRAY') {
+            my @mods = @$v;
+            while (@mods) {
+                my $name    = shift(@mods);
+                my $version = shift(@mods);
+                $data .= "$nest$key '$name' => $version;\n";
+            }
+        }
+        elsif (ref($v) eq 'HASH') {
+            $data .= "on '$key' => sub {\n";
+            $data .= &_deparse_deps($nest_level + 1, %$v);
+            $data .= "};\n";
+        }
+    }
+    return $data;
+}
+
 sub appname {
     my $self = shift;
     return $self->{appname};
@@ -57,6 +91,11 @@ sub classfile {
 sub action_chain {
     my $self = shift;
     return wantarray ? $self->{action_chain}->as_array : $self->{action_chain};
+}
+
+sub deps {
+    my $self = shift;
+    return $self->{deps};
 }
 
 sub makepath {
@@ -132,6 +171,11 @@ sub load_plugins {
         my $plugin = $plugin_class->new(setup => $self);
         $plugin->fix_setup;
     }
+}
+
+sub cpanfile {
+    my $self = shift;
+    &_deparse_deps(0, %{$self->deps});
 }
 
 1;

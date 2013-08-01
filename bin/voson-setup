@@ -2,11 +2,18 @@
 use strict;
 use warnings;
 use Voson::Setup;
+use Getopt::Long;
 
 my $appname = shift(@ARGV);
 help() unless $appname;
 
-my $setup = Voson::Setup->new(appname => $appname, plugins => ['Basic']);
+my $plugins = 'Normal';
+
+GetOptions (
+    "plugins=s" => $plugins,
+);
+
+my $setup = Voson::Setup->new(appname => $appname, plugins => [split(/,/, $plugins)]);
 $setup->do_task;
 
 sub help {

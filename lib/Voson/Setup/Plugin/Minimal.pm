@@ -1,4 +1,4 @@
-package Voson::Setup::Plugin::Basic;
+package Voson::Setup::Plugin::Minimal;
 use strict;
 use warnings;
 use parent 'Voson::Setup::Plugin';
@@ -43,8 +43,8 @@ sub create_psgi {
 
 sub create_cpanfile {
     my ($setup, $context) = @_;
-    my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('cpanfile');
-    $setup->spew('app.psgi', $data);
+    my $data = $setup->cpanfile;
+    $setup->spew('cpanfile', $data);
     return $context;
 }
 
@@ -84,9 +84,3 @@ use {{$c->appname}};
 
 {{$c->appname}}->run;
 
-@@ cpanfile
-requires 'Voson';
-
-on test => sub {
-    requires 'Test::More';
-};
