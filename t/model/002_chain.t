@@ -35,6 +35,14 @@ subtest normal => sub {
     is $obj->size, 5;
     
     is join(',', map {$_->()} $obj->as_array), 'poo,bar,123,321,fuga', 'as_array';
+
+    $obj->delete('foo');
+    isa_ok $chain->[0], 'Voson::Chain::Item::piyo';
+    isa_ok $chain->[1], 'Voson::Chain::Item::x';
+    isa_ok $chain->[2], 'Voson::Chain::Item::y';
+    isa_ok $chain->[3], 'Voson::Chain::Item::hoge';
+    is $obj->size, 4;
+    
 };
 
 subtest failure => sub {

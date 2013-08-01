@@ -31,6 +31,11 @@ sub after {
     $self->_inject($search, 1, @opts);
 }
 
+sub delete {
+    my ($self, $search) = @_;
+    splice( @{$self->{chain}}, $self->index($search), 1);
+}
+
 sub size {
     my $self = shift;
     return scalar( @{$self->{chain}} );
