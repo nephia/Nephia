@@ -28,9 +28,9 @@ use strict;
 use warnings;
 
 use Voson plugins => [
-    'Dispatch',
     'JSON',
     'HashHandler' => { handler => 'json_res' },
+    'Dispatch',
 ];
 
 app {
