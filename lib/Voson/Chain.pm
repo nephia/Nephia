@@ -8,37 +8,51 @@ sub new {
     my ($class, %opts) = @_;
     $opts{namespace}      = $class.'::Item' unless defined $opts{namespace};
     $opts{name_normalize} = 1 unless defined $opts{name_normalize};
-    bless {chain => [], %opts}, $class;
+    bless {chain => [], from => {}, %opts}, $class;
 }
 
 sub append {
-    my $self = shift;
-    $self->_inject('Tail', 1, @_);
+    my $self    = shift;
+    my $from    = caller;
+    my @actions = $self->_inject('Tail', 1, @_);
+    $self->{from}{$_} = $from for map {ref($_)} @actions;
 }
 
 sub prepend {
-    my $self = shift;
-    $self->_inject('Head', 0, @_);
+    my $self    = shift;
+    my $from    = caller;
+    my @actions = $self->_inject('Head', 0, @_);
+    $self->{from}{$_} = $from for map {ref($_)} @actions;
 }
 
 sub before {
     my ($self, $search, @opts) = @_;
-    $self->_inject($search, 0, @opts);
+    my $from    = caller;
+    my @actions = $self->_inject($search, 0, @opts);
+    $self->{from}{$_} = $from for map {ref($_)} @actions;
 }
 
 sub after {
     my ($self, $search, @opts) = @_;
-    $self->_inject($search, 1, @opts);
+    my $from    = caller;
+    my @actions = $self->_inject($search, 1, @opts);
+    $self->{from}{$_} = $from for map {ref($_)} @actions;
 }
 
 sub delete {
     my ($self, $search) = @_;
     splice( @{$self->{chain}}, $self->index($search), 1);
+    delete $self->{from}{$self->_normalize_name($search)};
 }
 
 sub size {
     my $self = shift;
     return scalar( @{$self->{chain}} );
+}
+
+sub from {
+    my ($self, $name) = @_;
+    return $self->{from}{$self->_normalize_name($name)};
 }
 
 sub index {
@@ -63,6 +77,7 @@ sub _inject {
     $index += $after;
     my @actions = $self->_bless_actions(@opts);
     splice @{$self->{chain}}, $index, 0, @actions;
+    return @actions;
 }
 
 sub _validate_action_opts {

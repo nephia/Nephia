@@ -52,4 +52,28 @@ subtest failure => sub {
     is $obj->size, 0;
 };
 
+{
+    package Voson::Chain::Test::Alpha;
+    sub add_foo {
+        my ($class, $chain) = @_;
+        $chain->append(foo => sub { 'Foo' });
+    }
+}
+
+{
+    package Voson::Chain::Test::Beta;
+    sub add_bar {
+        my ($class, $chain) = @_;
+        $chain->append(bar => sub { 'Bar' });
+    }
+}
+
+subtest from => sub {
+    my $obj = Voson::Chain->new;
+    Voson::Chain::Test::Alpha->add_foo($obj);
+    Voson::Chain::Test::Beta->add_bar($obj);
+    is $obj->from('foo'), 'Voson::Chain::Test::Alpha';
+    is $obj->from('bar'), 'Voson::Chain::Test::Beta';
+};
+
 done_testing;
