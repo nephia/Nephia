@@ -4,6 +4,7 @@ requires 'Module::Load';
 requires 'Router::Simple';
 requires 'Plack';
 requires 'JSON::Tiny';
+requires 'Data::Section::Simple';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
