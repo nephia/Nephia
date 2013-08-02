@@ -7,6 +7,7 @@ use Data::Section::Simple;
 use Module::Load ();
 use Voson::Chain;
 use Voson::Context;
+use Carp;
 
 sub new {
     my ($class, %opts) = @_;
@@ -79,7 +80,7 @@ sub appname {
 
 sub approot {
     my $self = shift;
-    return @{$self->{approot}};
+    return ref($self->{approot}) eq 'ARRAY' ? @{$self->{approot}} : ( $self->{approot} );
 }
 
 sub classfile {
@@ -166,15 +167,14 @@ sub diag {
 sub stop {
     my ($self, $str, @params) = @_;
     my $spaces = $self->_spaces_for_nest;
-    printf STDERR $spaces."\033[41m\033[1;33m[! SETUP STOPPED !]\033[0m \033[1;31m".$str."\033[0m\n", @params;
-    exit;
+    croak( sprintf($spaces."\033[41m\033[1;33m[! SETUP STOPPED !]\033[0m \033[1;31m".$str."\033[0m", @params) );
 }
 
 sub _spaces_for_nest {
     my $self = shift;
     my $spaces = '';
     if ($self->{nest}) {
-        $spaces .= ' ' for 1 .. $self->{nest} * 2
+        $spaces .= ' ' for 1 .. $self->{nest} * 2;
     }
     return $spaces;
 }
