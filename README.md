@@ -4,7 +4,7 @@ Voson - A mini-sized WAF that aimed to substitute for Nephia
 
 # SYNOPSIS
 
-    use Voson;
+    use Voson plugins => [...];
     app {
         my $req  = req;         ### Request object
         my $id   = param('id'); ### query-param that named "id" 
@@ -23,6 +23,10 @@ Let's try to create your project.
     voson-setup YourApp::Web
 
 Then, you may plackup on your project directory.
+
+# LOAD OPTIONS 
+
+Please see [Voson::Core](http://search.cpan.org/perldoc?Voson::Core).
 
 # DSL
 

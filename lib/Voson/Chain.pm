@@ -128,3 +128,99 @@ sub _shift_as_action {
 }
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Chain - Abstract code chain for hook mechanism of Voson
+
+=head1 DESCRIPTION
+
+Voson::Chain is an abstract code chain class for hook mechanism of Voson.
+
+=head1 SYNOPSIS
+
+    my $chain = Voson::Chain->new(namespace => 'Foobar::Chain::Item');
+    $chain->append(incr => sub { $_[0] + 1 }, double => sub { $_[0] * 2 }); ### y = ((x + 1) * 2)
+    $chain->prepend(power => sub { $_[0] ** 2 });                           ### y = (((x ** 2) + 1) * 2)
+    $chain->before('Head', plus3 => sub { $_[0] + 3 });                     ### y = ((((x + 3) ** 2) + 1) * 2)
+    $chain->after('plus3', half => sub { $_[0] / 2 });                      ### y = (((((x + 3) / 2) ** 2) + 1) * 2)
+    
+    my $x = 3;
+    for my $item ( $chain->as_array ) {
+        $x = $item->($x);
+    }
+    my $y = $x;
+    printf "y = %s\n", $y; ### 20
+
+=head1 ATTRIBUTES
+
+=head2 namespace
+
+Prefix of name for coderef-entries
+
+=head2 name_normalize
+
+Enable or Disable name normalization when add and/or search entry.
+
+=head1 METHODS
+
+=head2 append
+
+    $chain->append( entryname => sub { ... } );
+
+Add a new coderef to tail of chain.
+
+=head2 prepend
+
+    $chain->prepend( entryname => sub { ... } );
+
+Add a new coderef to head of chain.
+
+=head2 before
+
+    $chain->before( 'target', entryname => sub { ... } );
+
+Add a new coderef before target entry.
+
+=head2 after
+
+    $chain->after( 'target', entryname => sub { ... } );
+
+Add a new coderef after target entry.
+
+=head2 delete 
+
+    $chain->delete( 'target' );
+
+Delete specified entry.
+
+=head2 from
+
+    my $come_from = $chain->from( 'target' );
+
+Returns a class name of origin of specified entry.
+
+=head2 size
+
+    my $size = $chain->size;
+
+Returns a number of entries.
+
+=head2 index
+
+    my $position = $chain->index( 'target' );
+
+Returns a position number of specified entry.
+
+=head2 as_array
+
+    my @coderef_list = $chain->as_array;
+
+Returns each coderef.
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+

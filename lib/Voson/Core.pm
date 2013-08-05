@@ -17,15 +17,15 @@ sub new {
     $opts{loaded_plugins} = Voson::Chain->new(namespace => 'Voson::Plugin', name_normalize => 0);
     $opts{dsl}            = {};
     my $self = bless {%opts}, $class;
-    $self->action_chain->append(Core => $class->can('action'));
-    $self->load_plugins;
+    $self->action_chain->append(Core => $class->can('_action'));
+    $self->_load_plugins;
     return $self;
 }
 
 sub export_dsl {
     my $self = shift; 
     my $dummy_context = Voson::Context->new;
-    $self->load_dsl($dummy_context);
+    $self->_load_dsl($dummy_context);
     my $class = $self->caller_class;
     no strict   qw/refs subs/;
     no warnings qw/redefine/;
@@ -36,7 +36,7 @@ sub export_dsl {
     };
 }
 
-sub load_plugins {
+sub _load_plugins {
     my $self = shift;
     my @plugins = (qw/Basic Cookie/, @{$self->{plugins}});
     while ($plugins[0]) {
@@ -82,7 +82,7 @@ sub filter_chain {
     return $self->{filter_chain};
 }
 
-sub action {
+sub _action {
     my ($self, $context) = @_;
     $context->set(res => $self->app->($context));
     return $context;
@@ -93,7 +93,7 @@ sub dsl {
     return $key ? $self->{dsl}{$key} : $self->{dsl};
 }
 
-sub load_dsl {
+sub _load_dsl {
     my ($self, $context) = @_;
     my $class = $self->caller_class;
     no strict   qw/refs subs/;
@@ -113,7 +113,7 @@ sub run {
         my $env     = shift;
         my $req     = Voson::Request->new($env);
         my $context = Voson::Context->new(req => $req);
-        $self->load_dsl($context);
+        $self->_load_dsl($context);
         my $res;
         for my $action ($self->{action_chain}->as_array) {
             ($context, $res) = $action->($self, $context);
@@ -130,3 +130,124 @@ sub run {
 }
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Core - Core Class of Voson
+
+=head1 DESCRIPTION
+
+Core Class of Voson, Object Oriented Interface Included.
+
+=head1 SYNOPSIS
+
+    my $v = Voson::Core->new( 
+        appname => 'YourApp::Web',
+        plugins => ['JSON', 'HashHandler' => { ... } ],
+    );
+    $v->app(sub {
+        my $req = req();
+        [200, [], 'Hello, World'];
+    });
+    $v->run;
+
+=head1 ATTRIBUTES
+
+=head2 appname
+
+Your Application Name. Default is caller class.
+
+=head2 plugins
+
+Voson plugins you want to load.
+
+=head2 app
+
+Application as coderef.
+
+=head1 METHODS
+
+=head2 action_chain
+
+Returns a Voson::Chain object for specifying order of actions.
+
+=head2 filter_chain
+
+Returns a Voson::Chain object for specifying order of filters.
+
+=head2 caller_class
+
+Returns caller class name as string.
+
+=head2 app
+
+Accessor method for application coderef (ignore plugins, actions, and filters).
+
+=head2 export_dsl
+
+Export DSL (see dsl method) into caller namespace.
+
+=head2 loaded_plugins
+
+Returns objects of loaded plugins.
+
+=head2 dsl
+
+Returns pairs of name and coderef of DSL as hashref.
+
+=head2 run
+
+Returns an application as coderef (include plugins, actions, and filters).
+
+=head1 HOOK MECHANISM
+
+Voson::Core includes hook mechanism itself. These provided as L<Voson::Chain> object.
+
+Voson::Core has action_chain and filter_chain. Look following ASCII Art Image.
+
+    
+        [HTTP Request]                              [HTTP Response]
+           |                                                   A
+           |                                                   |
+           v                                                   |
+       /------------------------------------\    /---------------------\
+       |                                    |    |                     |
+       |    C O N T E X T (HASHREF)         |--->|  Voson::Response    |
+       |                                    |    |                     |
+       \------------------------------------/    \---------------------/
+           |  A    |  A     |   A    |  A           |           A
+           |  |    |  |     |   |    |  |        [Content]      |
+       /---|--|----|--|-----|---|----|--|--\   /----|-----------|--------\
+       |   |  |    |  |     |   |    |  |  |   |    |           |        |
+       |   |  |    |  |     |   |    |  |  |   |    |           |        |
+       |   v  |    v  |     v   |    v  |  |   |    v           |        |
+       |  /~\ |   /~\ |   /~~~\ |   /~\ |  |   |   /~\    /~\   |        |
+       |  |A| |   |A| |   | A | |   |A| |  |   |   |F|    |F|   |        |
+       |  |c|-/   |c|-/   | p |-/   |c|-/  |   |   |i|--->|i|---+        |
+       |  |t|     |t|     | p.|     |t|    |   |   |l|    |l|            |
+       |  |i|     |i|     |   |     |i|    |   |   |t|    |t|            |
+       |  |o|     |o|     \---/     |o|    |   |   |e|    |e|            |
+       |  |n|     |n|               |n|    |   |   |r|    |r|            |
+       |  | |     | |               | |    |   |   | |    | |            |
+       |  |1|     |2|               |3|    |   |   |1|    |2|            |
+       |  \_/     \_/               \_/    |   |   \_/    \_/            |
+       |                                   |   |                         |
+       | action_chain                      |   | filter_chain            |
+       \-----------------------------------/   \-------------------------/
+    
+
+Actions (and App) in action_chain affects context. Then, Voson::Response object creates from context. 
+
+Afterwords, filters in filter_chain affects content string in Voson::Response.
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=head1 SEE ALSO
+
+L<Voson::Chain>
+
+=cut
