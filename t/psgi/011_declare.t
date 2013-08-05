@@ -18,6 +18,11 @@ use HTTP::Request::Common;
              my $message = param('message');
              [200, [], sprintf('You said "%s"', $message)];
          };
+         post '/' => sub {
+             my $req = req;
+             my $id = $req->param('id');
+             [200, [], sprintf('id = %s', $id)];
+         };
     };
 }
 
@@ -32,5 +37,7 @@ test_psgi $app, sub {
     is $res->content, 'Foo';
     $res = $cb->(GET '/say?message=hoge');
     is $res->content, 'You said "hoge"';
+    $res = $cb->(POST '/', [id => 123]);
+    is $res->content, 'id = 123';
 };
 done_testing;
