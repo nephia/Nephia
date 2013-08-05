@@ -14,6 +14,10 @@ use HTTP::Request::Common;
          get '/foo' => sub {
              [200, [], 'Foo'];
          };
+         get '/say' => sub {
+             my $message = param('message');
+             [200, [], sprintf('You said "%s"', $message)];
+         };
     };
 }
 
@@ -26,5 +30,7 @@ test_psgi $app, sub {
     is $res->content, 'Hello';
     $res = $cb->(GET '/foo');
     is $res->content, 'Foo';
+    $res = $cb->(GET '/say?message=hoge');
+    is $res->content, 'You said "hoge"';
 };
 done_testing;
