@@ -13,8 +13,8 @@ sub new {
     my ($class, %opts) = @_;
     my $self = $class->SUPER::new(%opts);
     my $app = $self->app;
-    $app->action_chain->prepend(CookieEater => $self->can('eat_cookie'));
-    $app->action_chain->append(CookieImprinter => $self->can('imprint_cookie'));
+    $app->action_chain->prepend(CookieEater => $self->can('_eat_cookie'));
+    $app->action_chain->append(CookieImprinter => $self->can('_imprint_cookie'));
     return $self;
 }
 
@@ -32,7 +32,7 @@ sub cookie {
     };
 }
 
-sub eat_cookie {
+sub _eat_cookie {
     my ($app, $context) = @_;
     my $req = $context->get('req');
     my $cookies = $req->cookies || {};
@@ -40,7 +40,7 @@ sub eat_cookie {
     return $context;
 }
 
-sub imprint_cookie {
+sub _imprint_cookie {
     my ($app, $context) = @_;
     my $res = $context->get('res');
     $res = Scalar::Util::blessed($res) ? $res : Voson::Response->new(@$res);
@@ -55,3 +55,43 @@ sub imprint_cookie {
 1;
 
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Plugin::Cookie - Cookie manipulation for Voson
+
+=head1 DESCRIPTION
+
+This plugin provides cookie manipulation feature.
+
+=head1 SYNOPSIS
+
+    package YourApp::Web;
+    use Voson plugins => ['Cookie'];
+    app {
+        my $count = cookie('count') || 0;
+        $count++;
+        cookie(count => $count);
+        [200, [], "count = $count"];
+    };
+
+=head1 DSL
+
+=head2 cookie
+
+    # set cookie
+    cookie($name => $value);
+    
+    # get cookie
+    my $value = cookie($name);
+
+Set or get specified cookie.
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=cut
+
