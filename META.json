@@ -43,11 +43,13 @@
       "runtime" : {
          "requires" : {
             "Data::Section::Simple" : "0",
+            "Encode" : "0",
             "JSON::Tiny" : "0",
             "Module::Load" : "0",
             "Plack" : "0",
             "Router::Simple" : "0",
             "Scalar::Util" : "0",
+            "URI::Encode" : "0",
             "perl" : "5.008005"
          }
       },
