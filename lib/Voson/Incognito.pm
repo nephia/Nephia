@@ -28,3 +28,40 @@ sub _incognito_namespace {
 } 
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Incognito - A mechanism that conceal a Voson instance into namespace
+
+=head1 DESCRIPTION
+
+A concealer for Voson.
+
+=head1 SYNOPSIS
+
+    Voson::Incognito->incognito( caller => 'MyApp', plugins => [...], app => sub {...} );
+    my $voson_instance = Voson::Incognito->unmask('MyApp');
+    $voson_instance->run;
+
+=head1 METHODS
+
+=head2 incognito
+
+    Voson::Incognito->incognito( %opts );
+
+Conceal a Voson instance into namespace. See L<Voson::Core> about option.
+
+=head2 unmask
+
+    my $instance = Voson::Incognito->unmask( $appname );
+
+Returns a Voson instance that has a specified appname.
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=cut
+
