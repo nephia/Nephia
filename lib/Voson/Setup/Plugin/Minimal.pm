@@ -83,6 +83,11 @@ done_testing;
 @@ app.psgi
 use strict;
 use warnings;
+use File::Spec;
+use File::Basename 'dirname';
+use lib (
+    File::Spec->catdir(dirname(__FILE__), 'lib'), 
+);
 use {{$c->appname}};
 
 {{$c->appname}}->run;
