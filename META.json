@@ -49,7 +49,7 @@
             "Plack" : "0",
             "Router::Simple" : "0",
             "Scalar::Util" : "0",
-            "URI::Encode" : "0",
+            "URL::Encode" : "0",
             "perl" : "5.008005"
          }
       },

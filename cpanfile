@@ -5,7 +5,7 @@ requires 'Router::Simple';
 requires 'Plack';
 requires 'JSON::Tiny';
 requires 'Data::Section::Simple';
-requires 'URI::Encode';
+requires 'URL::Encode';
 requires 'Encode';
 
 on 'test' => sub {
