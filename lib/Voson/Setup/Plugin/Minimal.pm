@@ -61,6 +61,8 @@ use strict;
 use warnings;
 use Voson;
 
+our $VERSION = 0.01;
+
 app {
     [200, [], 'Hello, World!'];
 };
