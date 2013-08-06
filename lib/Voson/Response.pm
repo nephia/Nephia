@@ -4,3 +4,5 @@ use warnings;
 use parent 'Plack::Response';
 
 1;
+
+__END__

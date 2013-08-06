@@ -195,3 +195,6 @@ sub cpanfile {
 }
 
 1;
+
+__END__
+
