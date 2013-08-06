@@ -214,7 +214,7 @@ Voson::Core has action_chain and filter_chain. Look following ASCII Art Image.
            v                                                   |
        /------------------------------------\    /---------------------\
        |                                    |    |                     |
-       |    C O N T E X T (HASHREF)         |--->|  Voson::Response    |
+       |           Voson::Context           |--->|  Voson::Response    |
        |                                    |    |                     |
        \------------------------------------/    \---------------------/
            |  A    |  A     |   A    |  A           |           A
