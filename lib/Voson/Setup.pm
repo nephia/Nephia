@@ -9,6 +9,8 @@ use Voson::Chain;
 use Voson::Context;
 use Carp;
 
+our $NEXT;
+
 sub new {
     my ($class, %opts) = @_;
     $opts{nest}           = 0;
@@ -130,12 +132,15 @@ sub spew {
 
 sub process_template {
     my ($self, $data) = @_;
-    my $c = $self; ### for template
+    my $c = $self;                 ### for template
+    local $NEXT = '\{\{$NEXT\}\}'; ### for minilla friendly
     while (my ($code) = $data =~ /\{\{(.*?)\}\}/) {
         my $replace = eval "$code";
         $self->stop($@) if $@;
         $data =~ s/\{\{(.*?)\}\}/$replace/x;
     }
+    $data =~ s/\\\{/{/g;
+    $data =~ s/\\\}/}/g;
     return $data;
 }
 

@@ -27,6 +27,8 @@ package {{$c->appname}};
 use strict;
 use warnings;
 
+our $VERSION = 0.01;
+
 use Voson plugins => [
     'JSON',
     'HashHandler' => { handler => 'json_res' },
@@ -44,3 +46,34 @@ app {
 };
 
 1;
+
+=encoding utf-8
+
+=head1 NAME
+
+{{$c->appname}} - Web Application that powered by Voson
+
+=head1 DESCRIPTION
+
+An web application
+
+=head1 SYNOPSIS
+
+    use {{$c->appname}};
+    {{$c->appname}}->run;
+
+=head1 AUTHOR
+
+clever people
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 SEE ALSO
+
+L<Voson>
+
+=cut
+

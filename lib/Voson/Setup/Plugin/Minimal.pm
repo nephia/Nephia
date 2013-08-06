@@ -12,6 +12,7 @@ sub fix_setup {
         CreateTests    => \&create_tests,
         CreatePSGI     => \&create_psgi,
         CreateCPANFile => \&create_cpanfile,
+        CreateChanges  => \&create_changes,
     );
 }
 
@@ -48,6 +49,13 @@ sub create_cpanfile {
     my ($setup, $context) = @_;
     my $data = $setup->cpanfile;
     $setup->spew('cpanfile', $data);
+    return $context;
+}
+
+sub create_changes {
+    my ($setup, $context) = @_;
+    my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('Changes');
+    $setup->spew('Changes', $setup->process_template($data));
     return $context;
 }
 
@@ -124,3 +132,9 @@ use {{$c->appname}};
 
 {{$c->appname}}->run;
 
+@@ Changes
+Revision history for Perl extention {{$c->appname}}
+
+{{$NEXT}}
+
+    - original version
