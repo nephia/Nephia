@@ -77,35 +77,35 @@ app {
 
 1;
 
-=encoding utf-8
+:::encoding utf-8
 
-=head1 NAME
+:::head1 NAME
 
 {{$c->appname}} - Web Application that powered by Voson
 
-=head1 DESCRIPTION
+:::head1 DESCRIPTION
 
 An web application
 
-=head1 SYNOPSIS
+:::head1 SYNOPSIS
 
     use {{$c->appname}};
     {{$c->appname}}->run;
 
-=head1 AUTHOR
+:::head1 AUTHOR
 
 clever people
 
-=head1 LICENSE
+:::head1 LICENSE
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
-=head1 SEE ALSO
+:::head1 SEE ALSO
 
 L<Voson>
 
-=cut
+:::cut
 
 @@ 001_use.t
 use strict;
@@ -138,3 +138,34 @@ Revision history for Perl extention {{$c->appname}}
 {{$NEXT}}
 
     - original version
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Setup::Plugin::Minimal - Minimal setup of Voson
+
+=head1 DESCRIPTION
+
+Minimal setup plugin
+
+=head1 SYNOPSIS
+
+    $ voson-setup --plugins Minimal YourApp
+
+=head1 ENABLED PLUGINS
+
+=over 4
+
+=item L<Voson::Plugin::Basic>
+
+=back
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=cut
+

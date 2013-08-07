@@ -48,6 +48,16 @@ Let's try to create your project.
 
 Then, you may plackup on your project directory.
 
+Please see L<Voson::Setup::Plugin::Basic> for detail.
+
+=head1 BOOTSTRAP A MINIMALIST STRUCTURE
+
+Use "--plugins Minimal" option to minimalistic setup.
+
+    voson-setup --plugins Minimal YourApp::Mini
+
+Please see L<Voson::Setup::Plugin::Minimal> for detail.
+
 =head1 LOAD OPTIONS 
 
 Please see L<Voson::Core>.
@@ -63,6 +73,10 @@ Specify code-block of your webapp.
 =head2 other two basic DSL
 
 Please see L<Voson::Plugin::Basic>.
+
+=head2 dispatcher DSL
+
+Please see L<Voson::Plugin::Dispatch>.
 
 =head1 EXPORTS
 

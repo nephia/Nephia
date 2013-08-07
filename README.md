@@ -24,6 +24,16 @@ Let's try to create your project.
 
 Then, you may plackup on your project directory.
 
+Please see [Voson::Setup::Plugin::Basic](http://search.cpan.org/perldoc?Voson::Setup::Plugin::Basic) for detail.
+
+# BOOTSTRAP A MINIMALIST STRUCTURE
+
+Use "--plugins Minimal" option to minimalistic setup.
+
+    voson-setup --plugins Minimal YourApp::Mini
+
+Please see [Voson::Setup::Plugin::Minimal](http://search.cpan.org/perldoc?Voson::Setup::Plugin::Minimal) for detail.
+
 # LOAD OPTIONS 
 
 Please see [Voson::Core](http://search.cpan.org/perldoc?Voson::Core).
@@ -39,6 +49,10 @@ Specify code-block of your webapp.
 ## other two basic DSL
 
 Please see [Voson::Plugin::Basic](http://search.cpan.org/perldoc?Voson::Plugin::Basic).
+
+## dispatcher DSL
+
+Please see [Voson::Plugin::Dispatch](http://search.cpan.org/perldoc?Voson::Plugin::Dispatch).
 
 # EXPORTS
 

@@ -141,6 +141,7 @@ sub process_template {
     }
     $data =~ s/\\\{/{/g;
     $data =~ s/\\\}/}/g;
+    $data =~ s/\:\:\:/=/g;
     return $data;
 }
 
@@ -202,4 +203,28 @@ sub cpanfile {
 1;
 
 __END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Setup - Base class of setup tool
+
+=head1 DESCRIPTION
+
+This class is used in setup tool internally.
+
+=head1 SYNOPSIS
+
+    my $setup = Voson::Setup->new(
+        appname => 'YourApp::Web',
+        plugins => ['Normal'],
+    );
+    $setup->do_task;
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=cut
 

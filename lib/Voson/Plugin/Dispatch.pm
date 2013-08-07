@@ -62,3 +62,66 @@ sub path {
 }
 
 1;
+
+__END__
+
+=encoding utf-8
+
+=head1 NAME
+
+Voson::Plugin::Dispatch - Dispatcher Plugin for Voson
+
+=head1 DESCRIPTION
+
+This plugin provides dispatcher feature to Voson.
+
+=head1 SYNOPSIS
+
+    use Voson plugins => ['Dispatch'];
+    
+    my $users = {};
+    
+    app {
+        get '/' => sub { [200, [], 'Hello, World!'] };
+        get '/user/:id' => sub {
+            my $id = path_param('id');
+            my $user = $users->{$id};
+            $user ? 
+                [200, [], sprintf('name = %s', $user->{name}) ]
+                [404, [], 'no such user']
+            ;
+        };
+        post '/user/:id' => sub {
+            my $id = path_param('id');
+            my $name = param('name'); 
+            $users->{$id} = { name => $name };
+            [200, [], 'registered!'];
+        };
+    };
+
+=head1 DSL
+
+=head2 get post put del
+
+    get $path => sub { ... };
+
+Add action for $path. You may use L<Router::Simple> syntax in $path.
+
+=head2 path_param
+
+    get '/user/:id' => sub {
+        my $id = path_param('id');
+        ### or 
+        my $path_params = path_param;
+        $id = $path_params->{id};
+        ...
+    };
+
+Fetch captured parameter from PATH_INFO.
+
+=head1 AUTHOR
+
+ytnobody E<lt>ytnobody@gmail.comE<gt>
+
+=cut
+
