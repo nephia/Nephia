@@ -21,7 +21,7 @@ sub new {
     $opts{options}      ||= {};
     $opts{deps}         ||= $class->_build_deps;
     my $self = bless {%opts}, $class;
-    $self->load_plugins;
+    $self->_load_plugins;
     return $self
 }
 
@@ -185,7 +185,7 @@ sub _spaces_for_nest {
     return $spaces;
 }
 
-sub load_plugins {
+sub _load_plugins {
     my $self = shift;
     for my $plugin_name ( @{$self->{plugins}} ) {
         my $plugin_class = $plugin_name =~ /^Voson::Setup::Plugin::/ ? $plugin_name : 'Voson::Setup::Plugin::'.$plugin_name;
