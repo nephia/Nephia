@@ -6,6 +6,7 @@ use Carp;
 sub new {
     my ($class, %opts) = @_;
     $class->_check_needs($opts{app});
+    $class->_check_requires($opts{app});
     return bless {%opts}, $class;
 }
 
@@ -21,12 +22,22 @@ sub exports {
 
 sub needs { return () }
 
+sub requires { return () }
+
 sub _check_needs {
     my ($class, $app) = @_;
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
     for my $need ($class->needs) {
         $need = $need =~ /^Voson::Plugin/ ? $need : "Voson::Plugin::$need";
         croak "$class needs $need, you have to load $need first" unless $app->loaded_plugins->index($need) > 0;
+    }
+}
+
+sub _check_requires {
+    my ($class, $app) = @_;
+    local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+    for my $requires ($class->requires) {
+        croak "$class requires $requires DSL, you have to load some plugin that provides $requires DSL" unless $app->{DSL}{$requires};
     }
 }
 
@@ -72,7 +83,13 @@ You have to override it if you want to export some DSL.
 
 Specifier for needs plugins.
 
-You have to override it if you want to export some DSL.
+=head2 requires
+
+    sub requires {
+        return qw/dsl_a dsl_b/;
+    }
+
+Specifier for required DSLs.
 
 =head1 AUTHOR
 
