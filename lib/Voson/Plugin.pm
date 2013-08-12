@@ -35,9 +35,14 @@ sub _check_needs {
 
 sub _check_requires {
     my ($class, $app) = @_;
+    return unless $app;
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+
+    my @plugins = $app->loaded_plugins;
+    my @exports = map { $_->exports } @plugins;
+    
     for my $requires ($class->requires) {
-        croak "$class requires $requires DSL, you have to load some plugin that provides $requires DSL" unless $app->{DSL}{$requires};
+        croak "$class requires $requires DSL, you have to load some plugin that provides $requires DSL" unless grep { $_ eq $requires } @exports;
     }
 }
 

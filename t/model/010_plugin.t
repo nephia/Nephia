@@ -37,7 +37,7 @@ subtest basal => sub {
     isa_ok $x, 'Voson::Plugin';
     is $x->exports, undef, 'not export anything';
 };
-    
+
 subtest needs_failure => sub {
     throws_ok(
         sub{Voson::Core->new(plugins => [qw/TestBeta/])}, 

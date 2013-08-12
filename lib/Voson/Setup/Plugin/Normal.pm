@@ -2,6 +2,7 @@ package Voson::Setup::Plugin::Normal;
 use strict;
 use warnings;
 use parent 'Voson::Setup::Plugin::Minimal';
+use File::Spec;
 
 sub fix_setup {
     my $self = shift;
@@ -9,6 +10,7 @@ sub fix_setup {
     my $chain = $self->setup->action_chain;
     $chain->delete('CreateClass');
     $chain->after('CreateProject', CreateClass => \&create_class);
+    $chain->append(CreateTemplate => \&create_template);
 }
 
 sub create_class {
@@ -16,6 +18,12 @@ sub create_class {
     my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('MyClass.pm');
     $setup->spew($setup->classfile, $setup->process_template($data));
     return $context;
+}
+
+sub create_template {
+    my ($setup, $context) = @_;
+    my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('index.html');
+    $setup->spew('view', 'index.html', $setup->process_template($data));
 }
 
 1;
@@ -26,17 +34,25 @@ __DATA__
 package {{$c->appname}};
 use strict;
 use warnings;
+use File::Spec;
 
 our $VERSION = 0.01;
 
 use Voson plugins => [
     'JSON',
-    'HashHandler' => { handler => 'json_res' },
+    'View::MicroTemplate' => {
+        include_path => [File::Spec->catdir('view')],
+    },
+    'ResponseHandler',
     'Dispatch',
 ];
 
 app {
-    get '/' => sub { 
+    get '/' => sub {
+        {template => 'index.html', appname => '{{$c->appname}}'};
+    };
+
+    get '/simple' => sub { 
         [200, [], 'Hello, World!']; 
     };
 
@@ -77,6 +93,18 @@ L<Voson>
 
 :::cut
 
+@@ index.html
+
+? my $arg = shift;
+<html>
+<head>
+<title><?= $arg->{appname} ?> - powered by Voson</title>
+<body>
+<h1><?= $arg->{appname} ?> - powered by Voson</h1>
+</body>
+</html>
+
+
 __END__
 
 =encoding utf-8
@@ -99,7 +127,9 @@ Normal setup plugin.
 
 =item L<Voson::Plugin::JSON>
 
-=item L<Voson::Plugin::HashHandler> (option is {handler => 'json_res'})
+=item L<Voson::Plugin::View::MicroTemplate>
+
+=item L<Voson::Plugin::ResponseHandler>
 
 =item L<Voson::Plugin::Dispatch>
 
