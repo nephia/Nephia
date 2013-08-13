@@ -1,13 +1,8 @@
 requires 'perl', '5.008001';
-requires 'Scalar::Util';
-requires 'Module::Load';
-requires 'Router::Simple';
 requires 'Plack';
-requires 'JSON::Tiny';
+requires 'Module::Load';
 requires 'Data::Section::Simple';
 requires 'URL::Encode';
-requires 'Encode';
-requires 'Text::MicroTemplate';
 requires 'File::Fetch';
 requires 'Archive::Extract';
 
