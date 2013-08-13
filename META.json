@@ -43,6 +43,7 @@
       "runtime" : {
          "requires" : {
             "Archive::Extract" : "0",
+            "Class::Accessor::Lite" : "0",
             "Data::Section::Simple" : "0",
             "File::Fetch" : "0",
             "Module::Load" : "0",
