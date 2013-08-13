@@ -8,6 +8,8 @@ requires 'Data::Section::Simple';
 requires 'URL::Encode';
 requires 'Encode';
 requires 'Text::MicroTemplate';
+requires 'File::Fetch';
+requires 'Archive::Extract';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';

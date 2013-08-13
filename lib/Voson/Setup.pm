@@ -1,14 +1,18 @@
 package Voson::Setup;
 use strict;
 use warnings;
-use File::Spec;
-use File::Basename 'dirname';
+use Archive::Extract;
+use Carp;
 use Data::Section::Simple;
+use File::Basename 'fileparse';
+use File::Fetch;
+use File::Spec;
+use File::Temp 'tempdir';
 use Module::Load ();
 use Voson::Chain;
 use Voson::Context;
 use Voson::MetaTemplate;
-use Carp;
+use URI;
 
 our $NEXT;
 
@@ -195,16 +199,65 @@ sub _spaces_for_nest {
 sub _load_plugins {
     my $self = shift;
     for my $plugin_name ( @{$self->{plugins}} ) {
-        my $plugin_class = $plugin_name =~ /^Voson::Setup::Plugin::/ ? $plugin_name : 'Voson::Setup::Plugin::'.$plugin_name;
-        Module::Load::load($plugin_class);
-        my $plugin = $plugin_class->new(setup => $self);
-        $plugin->fix_setup;
+        $self->_load_plugin($plugin_name);
     }
+}
+
+sub _load_plugin {
+    my ($self, $plugin_name) = @_;
+    my $plugin_class = $self->_plugin_name_normalize($plugin_name);
+    Module::Load::load($plugin_class);
+    my $plugin = $plugin_class->new(setup => $self);
+    $plugin->fix_setup;
+    for my $bundle ($plugin->bundle) {
+        $self->diag("\033[1;36m[bundle]\033[0m \033[0;35m%s\033[0m for \033[0;32m%s\033[0m", $self->_plugin_name_normalize($bundle), $plugin_class);
+        $self->_load_plugin($bundle);
+    }
+    return $plugin;
+}
+
+sub _plugin_name_normalize {
+    my ($self, $plugin_name) = @_;
+    my $plugin_class = $plugin_name =~ /^Voson::Setup::Plugin::/ ? $plugin_name : 'Voson::Setup::Plugin::'.$plugin_name;
+    return $plugin_class;
 }
 
 sub cpanfile {
     my $self = shift;
     &_deparse_deps(0, %{$self->deps});
+}
+
+sub assets {
+    my ($self, $url, @in_path) = @_;
+    my $path = File::Spec->catfile($self->approot, @in_path);
+    unless ( -e $path ) {
+        $self->diag('Fetching content from url %s', $url);
+        my $fetcher = File::Fetch->new( uri => $url );
+        my $content ;
+        $fetcher->fetch(to => \$content) or $self->stop('Could not fetch url %s : %s', $url, $!);
+        $self->spew(@in_path, $content);
+    }
+}
+
+sub assets_archive {
+    my ($self, $url, @in_path) = @_;
+    my $path = File::Spec->catdir($self->approot, @in_path);
+    unless ( -d $path ) {
+        local $Carp::CarpLevel = $Carp::CarpLevel + 1;
+
+        my ($filename) = fileparse( URI->new($url)->path );
+        $self->assets( $url, $filename );
+        my $archive_file = File::Spec->catfile($self->approot, $filename);
+
+        $self->makepath( @in_path );
+
+        $self->diag('Extract Archive %s into %s', $archive_file, $path);
+        my $archive = Archive::Extract->new(archive => $archive_file);
+        $archive->extract(to => $path);
+
+        $self->diag('Cleanup Archive %s', $archive_file);
+        unlink $archive_file;
+    }
 }
 
 1;

@@ -42,8 +42,10 @@
       },
       "runtime" : {
          "requires" : {
+            "Archive::Extract" : "0",
             "Data::Section::Simple" : "0",
             "Encode" : "0",
+            "File::Fetch" : "0",
             "JSON::Tiny" : "0",
             "Module::Load" : "0",
             "Plack" : "0",

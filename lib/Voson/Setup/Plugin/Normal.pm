@@ -4,12 +4,18 @@ use warnings;
 use parent 'Voson::Setup::Plugin::Minimal';
 use File::Spec;
 
+sub bundle {
+    qw/ Assets::Bootstrap Assets::JQuery /;
+}
+
 sub fix_setup {
     my $self = shift;
     $self->SUPER::fix_setup;
     my $chain = $self->setup->action_chain;
     $chain->delete('CreateClass');
+    $chain->delete('CreatePSGI');
     $chain->after('CreateProject', CreateClass => \&create_class);
+    $chain->after('CreateProject', CreatePSGI => \&create_psgi);
     $chain->append(CreateTemplate => \&create_template);
 }
 
@@ -17,6 +23,13 @@ sub create_class {
     my ($setup, $context) = @_;
     my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('MyClass.pm');
     $setup->spew($setup->classfile, $setup->process_template($data));
+    return $context;
+}
+
+sub create_psgi {
+    my ($setup, $context) = @_;
+    my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('app.psgi');
+    $setup->spew('app.psgi', $setup->process_template($data));
     return $context;
 }
 
@@ -93,13 +106,49 @@ L<Voson>
 
 :::cut
 
-@@ index.html
+@@ app.psgi
+use strict;
+use warnings;
+use Plack::Builder;
+use File::Spec;
+use File::Basename 'dirname';
+use lib (
+    File::Spec->catdir(dirname(__FILE__), 'lib'), 
+);
+use {{$c->appname}};
 
+my $app = {{$c->appname}}->run;
+my $root = File::Spec->rel2abs(File::Spec->catdir(dirname(__FILE__)));
+
+builder {
+    enable 'Static', root => $root, path => qr{^/static/};
+    $app;
+};
+
+@@ index.html
+<!DOCTYPE html>
 <html>
 <head>
-<title>[= appname =] - powered by Voson</title>
+  <meta charset="utf-8">
+  <title>[= appname =] - powered by Voson</title>
+  <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+</head>
 <body>
-<h1>[= appname =] - powered by Voson</h1>
+  <div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="brand" href="/">[= appname =]</a>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="hero-unit">
+      <h1>[= appname =]</h1>
+      <p>An web-application that is empowered by Voson</p>
+    </div>
+  </div>
+  <script src="/static/js/jquery.min.js"></script>
+  <script src="/static/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
 

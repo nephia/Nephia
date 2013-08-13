@@ -16,6 +16,10 @@ sub fix_setup {
     my ($self) = @_;
 }
 
+sub bundle {
+    return ();
+}
+
 1;
 
 __END__
