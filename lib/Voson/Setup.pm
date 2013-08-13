@@ -7,6 +7,7 @@ use Data::Section::Simple;
 use Module::Load ();
 use Voson::Chain;
 use Voson::Context;
+use Voson::MetaTemplate;
 use Carp;
 
 our $NEXT;
@@ -20,6 +21,7 @@ sub new {
     $opts{plugins}      ||= [];
     $opts{options}      ||= {};
     $opts{deps}         ||= $class->_build_deps;
+    $opts{meta_tmpl}      = Voson::MetaTemplate->new($opts{meta_tmpl} ? %{$opts{meta_tmpl}} : ());
     my $self = bless {%opts}, $class;
     $self->_load_plugins;
     return $self
@@ -98,6 +100,11 @@ sub action_chain {
 sub deps {
     my $self = shift;
     return $self->{deps};
+}
+
+sub meta_tmpl {
+    my $self = shift;
+    return $self->{meta_tmpl};
 }
 
 sub makepath {

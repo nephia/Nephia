@@ -23,7 +23,7 @@ sub create_class {
 sub create_template {
     my ($setup, $context) = @_;
     my $data = $context->get('data_section')->(__PACKAGE__)->get_data_section('index.html');
-    $setup->spew('view', 'index.html', $setup->process_template($data));
+    $setup->spew('view', 'index.html', $setup->meta_tmpl->process($setup->process_template($data)));
 }
 
 1;
@@ -95,12 +95,11 @@ L<Voson>
 
 @@ index.html
 
-? my $arg = shift;
 <html>
 <head>
-<title><?= $arg->{appname} ?> - powered by Voson</title>
+<title>[= appname =] - powered by Voson</title>
 <body>
-<h1><?= $arg->{appname} ?> - powered by Voson</h1>
+<h1>[= appname =] - powered by Voson</h1>
 </body>
 </html>
 
