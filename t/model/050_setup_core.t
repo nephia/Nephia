@@ -65,6 +65,8 @@ subtest misc => sub {
     like $setup->_spaces_for_nest, qr/^ {4}$/;
     is $setup->_normalize_appname('MyApp::Web'), 'MyApp-Web';
     is_deeply $setup->_resolve_approot('MyApp::Web'), [qw/. MyApp-Web/];
+    is $setup->_plugin_name_normalize('FooBar'), 'Voson::Setup::Plugin::FooBar';
+    is $setup->_plugin_name_normalize('Voson::Setup::Plugin::FooBar'), 'Voson::Setup::Plugin::FooBar';
 };
 
 done_testing;
