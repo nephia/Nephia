@@ -206,7 +206,7 @@ sub _load_plugins {
 sub _load_plugin {
     my ($self, $plugin_name) = @_;
     my $plugin_class = $self->_plugin_name_normalize($plugin_name);
-    Module::Load::load($plugin_class);
+    Module::Load::load($plugin_class) unless $plugin_class->can('new');
     my $plugin = $plugin_class->new(setup => $self);
     $plugin->fix_setup;
     for my $bundle ($plugin->bundle) {
