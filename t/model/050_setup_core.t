@@ -24,6 +24,7 @@ subtest basic => sub {
             requires => ['Test::More' => 0],
         },
     };
+    isa_ok $setup->meta_tmpl, 'Voson::MetaTemplate';
 };
 
 subtest cpanfile => sub {
