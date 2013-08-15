@@ -47,6 +47,7 @@ If you want to create a new plugin for Voson::Setup, inherit this class.
         ### append feature here
         ...
     }
+    sub bundle { qw/ Foo Bar / } ### bundle "Voson::Setup::Plugin::Foo" and "Voson::Setup::Plugin::Bar"
 
 =head1 METHODS
 
@@ -61,6 +62,12 @@ Returns a Voson::Setup instance.
 =head2 fix_setup
 
 You have to override this method if you want to append some action to Voson::Setup.
+
+=head2 bundle 
+
+Returns array that contains bundled setup-plugins.
+
+You may override this method when you want to bundle other setup-plugins.
 
 =head1 AUTHOR
 
