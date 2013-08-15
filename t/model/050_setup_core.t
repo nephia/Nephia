@@ -45,7 +45,7 @@ subtest create => sub {
 };
 
 subtest template => sub {
-    is $setup->process_template('foobar {{$c->appname}}'), 'foobar MyApp::Web', 'process_template';
+    is $setup->process_template('foobar {{$self->appname}}'), 'foobar MyApp::Web', 'process_template';
 };
 
 subtest notification => sub {

@@ -39,43 +39,43 @@ HASHREF plus alpha
 
 =head1 SYNOPSIS
 
-    my $c = Voson::Context->new( foo => 'bar', hoge => [qw/fuga piyo/] );
-    $c->get('foo');           ### 'bar'
-    $c->get('hoge');          ### ['fuga', 'piyo'];
-    $c->set(fizzbuzz => sub { 
+    my $context = Voson::Context->new( foo => 'bar', hoge => [qw/fuga piyo/] );
+    $context->get('foo');           ### 'bar'
+    $context->get('hoge');          ### ['fuga', 'piyo'];
+    $context->set(fizzbuzz => sub { 
         my $x = ''; 
         $x .= 'fizz' if ! $x % 3; 
         $x .= 'buzz' if ! $x % 5; 
         $x .= $_[0] unless $x; 
         return $x;
     });
-    $c->delete('hoge');
-    $c->get('hoge')           ### undef
-    $c->get('fizzbuzz')->(12) ### 'fizz'
+    $context->delete('hoge');
+    $context->get('hoge')           ### undef
+    $context->get('fizzbuzz')->(12) ### 'fizz'
 
 =head1 METHODS
 
 =head2 new
 
-    my $c = Voson::Context->new( %items );
+    my $context = Voson::Context->new( %items );
 
 Instantiate Voson::Context. Then, store specified items.
 
 =head2 get
 
-    my $item = $c->get( $name );
+    my $item = $context->get( $name );
 
 Fetch specified item that stored.
 
 =head2 set
 
-    $c->set( $name => $value );
+    $context->set( $name => $value );
 
 Store specified item.
 
 =head2 delete
 
-    $c->delete( $name );
+    $context->delete( $name );
 
 Delete a specified item.
 

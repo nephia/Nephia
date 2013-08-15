@@ -13,7 +13,7 @@ use File::Temp 'tempdir';
     }
     sub test_alpha {
         my ($setup, $context) = @_;
-        my $data = $setup->process_template('Hello, {{$c->appname}}!');
+        my $data = $setup->process_template('Hello, {{$self->appname}}!');
         $setup->spew(qw/ misc foo.txt /, $data);
     }
 }

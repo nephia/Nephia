@@ -64,7 +64,7 @@ sub create_changes {
 __DATA__
 
 @@ MyClass.pm
-package {{$c->appname}};
+package {{$self->appname}};
 use strict;
 use warnings;
 use Voson;
@@ -81,7 +81,7 @@ app {
 
 :::head1 NAME
 
-{{$c->appname}} - Web Application that powered by Voson
+{{$self->appname}} - Web Application that powered by Voson
 
 :::head1 DESCRIPTION
 
@@ -89,8 +89,8 @@ An web application
 
 :::head1 SYNOPSIS
 
-    use {{$c->appname}};
-    {{$c->appname}}->run;
+    use {{$self->appname}};
+    {{$self->appname}}->run;
 
 :::head1 AUTHOR
 
@@ -113,7 +113,7 @@ use warnings;
 use Test::More;
 
 BEGIN {
-    use {{$c->appname}};
+    use {{$self->appname}};
 };
 
 ok 1, 'succeed to use';
@@ -128,12 +128,12 @@ use File::Basename 'dirname';
 use lib (
     File::Spec->catdir(dirname(__FILE__), 'lib'), 
 );
-use {{$c->appname}};
+use {{$self->appname}};
 
-{{$c->appname}}->run;
+{{$self->appname}}->run;
 
 @@ Changes
-Revision history for Perl extention {{$c->appname}}
+Revision history for Perl extention {{$self->appname}}
 
 {{$NEXT}}
 

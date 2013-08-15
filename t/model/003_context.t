@@ -4,14 +4,14 @@ use Test::More;
 use Voson::Context;
 
 subtest normal => sub {
-    my $c = Voson::Context->new(foo => "bar");
-    isa_ok $c, 'Voson::Context';
-    can_ok $c, qw/get set delete/;
-    is $c->get('foo'), 'bar', 'foo is bar';
-    $c->set(hoge => 'fuga');
-    is $c->get('hoge'), 'fuga', 'hoge is fuga';
-    $c->delete('hoge');
-    is $c->get('hoge'), undef, 'hoge was deleted';
+    my $context = Voson::Context->new(foo => "bar");
+    isa_ok $context, 'Voson::Context';
+    can_ok $context, qw/get set delete/;
+    is $context->get('foo'), 'bar', 'foo is bar';
+    $context->set(hoge => 'fuga');
+    is $context->get('hoge'), 'fuga', 'hoge is fuga';
+    $context->delete('hoge');
+    is $context->get('hoge'), undef, 'hoge was deleted';
 };
 
 done_testing;

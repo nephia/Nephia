@@ -143,7 +143,6 @@ sub spew {
 
 sub process_template {
     my ($self, $data) = @_;
-    my $c = $self;                 ### for template
     local $NEXT = '\{\{$NEXT\}\}'; ### for minilla friendly
     while (my ($code) = $data =~ /\{\{(.*?)\}\}/) {
         my $replace = eval "$code";
