@@ -23,7 +23,6 @@ sub new {
     $opts{classfile}    ||= $class->_resolve_classfile($opts{appname});
     $opts{action_chain}   = Voson::Chain->new(namespace => 'Voson::Setup::Action');
     $opts{plugins}      ||= [];
-    $opts{options}      ||= {};
     $opts{deps}         ||= $class->_build_deps;
     $opts{meta_tmpl}      = Voson::MetaTemplate->new($opts{meta_tmpl} ? %{$opts{meta_tmpl}} : ());
     my $self = bless {%opts}, $class;
@@ -280,6 +279,136 @@ This class is used in setup tool internally.
         plugins => ['Normal'],
     );
     $setup->do_task;
+
+=head1 ATTRIBUTES
+
+=head2 appname
+
+Application name. This attribute is required when instantiate.
+
+=head2 approot
+
+Application root directory. Default is "./Appname".
+
+=head2 plugins
+
+Plugins for using when setup. Default is [] .
+
+=head2 deps
+
+Dependencies for application as hashref. Default is following.
+
+    {
+        requires => ['Voson' => 0],
+        test => {
+            requires => ['Test::More' => 0],
+        },
+    };
+
+=head1 METHODS
+
+=head2 appname
+
+Returns application name.
+
+=head2 approot
+
+Returns application root as array.
+
+=head2 deps
+
+Returns dependencies as hashref.
+
+=head2 classfile
+
+Returns path for classfile as array.
+
+Example.
+
+    my $setup = Voson::Setup->new(appname => 'MyApp::Web');
+    my @path = $setup->classfile; # ( 'lib', 'MyApp', 'Web.pm' );
+
+=head2 action_chain
+
+Returns action chain as L<Voson::Chain> object.
+
+=head2 meta_tmpl
+
+Returns L<Voson::MetaTemplate> object.
+
+=head2 makepath
+
+Create specified directory recursively.
+
+Example.
+
+    my $setup = Voson::Setup->new(
+        appname => 'MyApp::Web'
+    );
+    $setup->makepath('misc', 'data', 'xml'); # create ./MyApp-Web/misc/data/xml
+
+=head2 spew
+
+Create specified file with specified content.
+
+Example.
+
+    my $xmldata = ...; # read some xml data...
+    $setup->spew('misc', 'data', 'xml', 'foo.xml', $xmldata); # create ./MyApp-Web/misc/data/xml/foo.xml
+
+=head2 process_template
+
+Process file-template.
+
+Example.
+
+    my $setup     = Voson::Setup->new(appname => 'MyApp::Web');
+    my $str       = 'Application name is "{{$self->appname}}"';
+    my $processed = $setup->process_template($str); # 'Application name is "MyApp::Web"'
+
+=head2 do_task
+
+Run actions in action chain.
+
+=head2 diag 
+
+Output some message to STDERR.
+
+=head2 stop
+
+Output some message to STDERR and exit setup.
+
+=head2 cpanfile
+
+Output cpanfile script.
+
+Example.
+
+    my $cpanfile_data = $setup->cpanfile;
+
+=head2 assets
+
+Download a file from url and save to specified file.
+
+Example.
+
+    # download somefile-0.1.2.js as ./MyApp-Web/static/js/somefile.js
+    $setup->assets(
+        'http://example.com/files/somefile-0.1.2.js', 
+        qw/static js somefile.js/
+    ); 
+
+=head2 assets_archive
+
+Download an archive-file from url and extract into specified path.
+
+Example.
+
+    # download somearch-0.1.2.tar.gz and extract into ./MyApp-Web/static/foo/
+    $setup->assets_archive(
+        'ftp://example.com/files/somearch-0.1.2.tar.gz',
+        qw/static foo/
+    );
 
 =head1 AUTHOR
 
