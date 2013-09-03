@@ -8,7 +8,7 @@ my $env = mock_env;
 
 my $app = sub {
     my ($self, $context) = @_;
-    [200, [], 'Hello, World!'];
+    [200, ['Content-Type' => 'text/plain'], 'Hello, World!'];
 };
 
 subtest normal => sub {
@@ -32,7 +32,7 @@ subtest normal => sub {
     isa_ok $v->run, 'CODE';
     my $res = $v->run->($env);
     isa_ok $res, 'ARRAY';
-    is_deeply $res, [200, [], ['Hello, World!']];
+    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, World!']];
 };
 
 subtest caller_class => sub {
@@ -61,6 +61,33 @@ subtest load_plugin => sub {
     my $v = Nephia::Core->new(plugins => [Test => {world => 'MyHome'}], app => $app);
     isa_ok $v, 'Nephia::Core';
     is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie Nephia::Plugin::Test]], 'plugins';
+};
+
+subtest load_plugin_with_builder_chain => sub {
+    {
+        package Nephia::Plugin::Test2;
+        use parent 'Nephia::Plugin';
+        use Plack::Builder;
+        sub new {
+            my ($class, %opts) = @_;
+            my $self = $class->SUPER::new(%opts);
+            my $world = $opts{world};
+            $self->app->builder_chain->append(Slate2 => sub {
+                my $app = shift;
+                builder {
+                    enable 'SimpleContentFilter', filter => sub { s/World/$world/ };
+                    $app;
+                };
+            });
+            return $self;
+        };
+    };
+
+    my $v = Nephia::Core->new(plugins => [Test2 => {world => 'MyHome'}], app => $app);
+    isa_ok $v, 'Nephia::Core';
+    is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie Nephia::Plugin::Test2]], 'plugins';
+    my $res = $v->run->($env);
+    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, MyHome!']];
 };
 
 done_testing;

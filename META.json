@@ -64,13 +64,13 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/ytnobody/Nephia/issues"
+         "web" : "https://github.com/nephia/Nephia/issues"
       },
-      "homepage" : "https://github.com/ytnobody/Nephia",
+      "homepage" : "https://github.com/nephia/Nephia",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/ytnobody/Nephia.git",
-         "web" : "https://github.com/ytnobody/Nephia"
+         "url" : "git://github.com/nephia/Nephia.git",
+         "web" : "https://github.com/nephia/Nephia"
       }
    },
    "version" : "0.80"

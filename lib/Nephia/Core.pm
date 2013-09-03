@@ -14,6 +14,7 @@ sub new {
     $opts{plugins}      ||= [];
     $opts{action_chain}   = Nephia::Chain->new(namespace => 'Nephia::Action');
     $opts{filter_chain}   = Nephia::Chain->new(namespace => 'Nephia::Filter');
+    $opts{builder_chain}  = Nephia::Chain->new(namespace => 'Nephia::Builder');
     $opts{loaded_plugins} = Nephia::Chain->new(namespace => 'Nephia::Plugin', name_normalize => 0);
     $opts{dsl}            = {};
     my $self = bless {%opts}, $class;
@@ -82,6 +83,11 @@ sub filter_chain {
     return $self->{filter_chain};
 }
 
+sub builder_chain {
+    my $self = shift;
+    return $self->{builder_chain};
+}
+
 sub _action {
     my ($self, $context) = @_;
     $context->set(res => $self->app->($context));
@@ -109,7 +115,7 @@ sub _load_dsl {
 sub run {
     my $self  = shift;
     my $class = $self->{caller};
-    return sub {
+    my $app = sub {
         my $env     = shift;
         my $req     = Nephia::Request->new($env);
         my $context = Nephia::Context->new(req => $req);
@@ -127,6 +133,10 @@ sub run {
         }
         return $res->finalize;
     };
+    for my $builder ($self->builder_chain->as_array) {
+        $app = $builder->($app);
+    }
+    return $app;
 }
 
 1;
@@ -179,13 +189,17 @@ Returns a Nephia::Chain object for specifying order of actions.
 
 Returns a Nephia::Chain object for specifying order of filters.
 
+=head2 builder_chain
+
+Returns a Nephia::Chain object for specifying order of builders.
+
 =head2 caller_class
 
 Returns caller class name as string.
 
 =head2 app
 
-Accessor method for application coderef (ignore plugins, actions, and filters).
+Accessor method for application coderef (ignore plugins, actions, filters, and builders).
 
 =head2 export_dsl
 
@@ -201,44 +215,79 @@ Returns pairs of name and coderef of DSL as hashref.
 
 =head2 run
 
-Returns an application as coderef (include plugins, actions, and filters).
+Returns an application as coderef (include plugins, actions, filters, and builders).
 
 =head1 HOOK MECHANISM
 
 Nephia::Core includes hook mechanism itself. These provided as L<Nephia::Chain> object.
 
-Nephia::Core has action_chain and filter_chain. Look following ASCII Art Image.
+Nephia::Core has action_chain, filter_chain, and builder_chain. 
+
+First, Look following ASCII Art Image.
+
+This AA presents relation of builder chain and application.
+
+          /----------------------------------------------\
+          |                                              |
+          |                           /---------------\  |
+          |                           |               |  |
+          |                           |   /~\   /~\   |  |
+          |                           |   |B|   |B|   |  |
+          |  +---------------+        |   |u|   |u|   |  |     |\   +----------+
+          |  |               |        |   |i|   |i|   |  |     | \  |          |
+          |  |            +---------------|l|---|l|------------+  \ |          |
+          |  | $v->run;   | application   |d|   |d|                \|   PSGI   |
+          |  |            |               |e|   |e|                 >          |
+          |  |            +---------------|r|---|r|------------+   /|    App.  |
+          |  |               |        |   | |   | |   |  |     |  / |          |
+          |  +---------------+        |   |1|   |2|   |  |     | /  |          |
+          |                           |   \_/   \_/   |  |     |/   +----------+
+          |  $v                       |               |  |
+          |  Nephia::Core obj.        | builder_chain |  |
+          |                           \---------------/  |
+          \----------------------------------------------/
+
+When execute run method of Nephia::Core instance, run method returns PSGI Application (coderef).
+
+Then, Builders in builder_chain modifies PSGI Application.
+
+Okay. Look following ASCII Art Image. 
+
+This AA presents relation of request, response, action chain, and filter chain.
 
     
         [HTTP Request]                              [HTTP Response]
            |                                                   A
-           |                                                   |
-           v                                                   |
-       /------------------------------------\    /---------------------\
-       |                                    |    |                     |
-       |           Nephia::Context          |--->|  Nephia::Response   |
-       |                                    |    |                     |
-       \------------------------------------/    \---------------------/
-           |  A    |  A     |   A    |  A           |           A
-           |  |    |  |     |   |    |  |        [Content]      |
-       /---|--|----|--|-----|---|----|--|--\   /----|-----------|--------\
-       |   |  |    |  |     |   |    |  |  |   |    |           |        |
-       |   |  |    |  |     |   |    |  |  |   |    |           |        |
-       |   v  |    v  |     v   |    v  |  |   |    v           |        |
-       |  /~\ |   /~\ |   /~~~\ |   /~\ |  |   |   /~\    /~\   |        |
-       |  |A| |   |A| |   | A | |   |A| |  |   |   |F|    |F|   |        |
-       |  |c|-/   |c|-/   | p |-/   |c|-/  |   |   |i|--->|i|---+        |
-       |  |t|     |t|     | p.|     |t|    |   |   |l|    |l|            |
-       |  |i|     |i|     |   |     |i|    |   |   |t|    |t|            |
-       |  |o|     |o|     \---/     |o|    |   |   |e|    |e|            |
-       |  |n|     |n|               |n|    |   |   |r|    |r|            |
-       |  | |     | |               | |    |   |   | |    | |            |
-       |  |1|     |2|               |3|    |   |   |1|    |2|            |
-       |  \_/     \_/               \_/    |   |   \_/    \_/            |
-       |                                   |   |                         |
-       | action_chain                      |   | filter_chain            |
-       \-----------------------------------/   \-------------------------/
-    
+   /-------|---------------------------------------------------|--------------\
+   |       |       Your Application                            |              |
+   |       |                                                   |              |
+   |       v                                                   |              |
+   |   /------------------------------------\    /---------------------\      |
+   |   |                                    |    |                     |      |
+   |   |           Nephia::Context          |--->|  Nephia::Response   |      |
+   |   |                                    |    |                     |      |
+   |   \------------------------------------/    \---------------------/      |
+   |       |  A    |  A     |   A    |  A           |           A             |
+   |       |  |    |  |     |   |    |  |        [Content]      |             |
+   |   /---|--|----|--|-----|---|----|--|--\   /----|-----------|--------\    |
+   |   |   |  |    |  |     |   |    |  |  |   |    |           |        |    |
+   |   |   |  |    |  |     |   |    |  |  |   |    |           |        |    |
+   |   |   v  |    v  |     v   |    v  |  |   |    v           |        |    |
+   |   |  /~\ |   /~\ |   /~~~\ |   /~\ |  |   |   /~\    /~\   |        |    |
+   |   |  |A| |   |A| |   | A | |   |A| |  |   |   |F|    |F|   |        |    |
+   |   |  |c|-/   |c|-/   | p |-/   |c|-/  |   |   |i|--->|i|---+        |    |
+   |   |  |t|     |t|     | p.|     |t|    |   |   |l|    |l|            |    |
+   |   |  |i|     |i|     |   |     |i|    |   |   |t|    |t|            |    |
+   |   |  |o|     |o|     \---/     |o|    |   |   |e|    |e|            |    |
+   |   |  |n|     |n|               |n|    |   |   |r|    |r|            |    |
+   |   |  | |     | |               | |    |   |   | |    | |            |    |
+   |   |  |1|     |2|               |3|    |   |   |1|    |2|            |    |
+   |   |  \_/     \_/               \_/    |   |   \_/    \_/            |    |
+   |   |                                   |   |                         |    |
+   |   | action_chain                      |   | filter_chain            |    |
+   |   \-----------------------------------/   \-------------------------/    |
+   \--------------------------------------------------------------------------/
+
 
 Actions (and App) in action_chain affects context. Then, Nephia::Response object creates from context. 
 
