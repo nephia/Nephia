@@ -1,9 +1,9 @@
 use strict;
 use Test::More;
 use Test::WWW::Mechanize::PSGI;
-use Voson::Core;
+use Nephia::Core;
 
-my $v = Voson::Core->new(
+my $v = Nephia::Core->new(
     app => sub {    
         my $cnt = cookie('count') || 0;
         cookie(count => ++$cnt);

@@ -1,4 +1,4 @@
-package Voson::Chain;
+package Nephia::Chain;
 use strict;
 use warnings;
 use Carp;
@@ -135,15 +135,15 @@ __END__
 
 =head1 NAME
 
-Voson::Chain - Abstract code chain for hook mechanism of Voson
+Nephia::Chain - Abstract code chain for hook mechanism of Nephia
 
 =head1 DESCRIPTION
 
-Voson::Chain is an abstract code chain class for hook mechanism of Voson.
+Nephia::Chain is an abstract code chain class for hook mechanism of Nephia.
 
 =head1 SYNOPSIS
 
-    my $chain = Voson::Chain->new(namespace => 'Foobar::Chain::Item');
+    my $chain = Nephia::Chain->new(namespace => 'Foobar::Chain::Item');
     $chain->append(incr => sub { $_[0] + 1 }, double => sub { $_[0] * 2 }); ### y = ((x + 1) * 2)
     $chain->prepend(power => sub { $_[0] ** 2 });                           ### y = (((x ** 2) + 1) * 2)
     $chain->before('Head', plus3 => sub { $_[0] + 3 });                     ### y = ((((x + 3) ** 2) + 1) * 2)

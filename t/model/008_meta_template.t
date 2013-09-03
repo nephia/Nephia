@@ -2,12 +2,12 @@ use strict;
 use warnings;
 use utf8;
 use Test::More;
-use Voson::MetaTemplate;
+use Nephia::MetaTemplate;
 
 my $data = join('', (<DATA>));
 
 subtest default => sub {
-    my $meta = Voson::MetaTemplate->new;
+    my $meta = Nephia::MetaTemplate->new;
     my $expect = <<EOF;
 ? my \$arg = shift;
 <html>
@@ -24,7 +24,7 @@ EOF
 };
 
 subtest tterse => sub {
-    my $meta = Voson::MetaTemplate->new(
+    my $meta = Nephia::MetaTemplate->new(
         tag           => '[% ... %]',
         arrow         => '.',
         argument      => '...',

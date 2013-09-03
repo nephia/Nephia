@@ -1,9 +1,9 @@
-package Voson::Plugin::Cookie;
+package Nephia::Plugin::Cookie;
 use strict;
 use warnings;
-use parent 'Voson::Plugin';
+use parent 'Nephia::Plugin';
 use Scalar::Util ();
-use Voson::Response;
+use Nephia::Response;
 
 sub exports {
     qw/cookie/;
@@ -43,7 +43,7 @@ sub _eat_cookie {
 sub _imprint_cookie {
     my ($app, $context) = @_;
     my $res = $context->get('res');
-    $res = Scalar::Util::blessed($res) ? $res : Voson::Response->new(@$res);
+    $res = Scalar::Util::blessed($res) ? $res : Nephia::Response->new(@$res);
     my $cookies = $context->get('cookies');
     if ($cookies) {
         $res->cookies->{$_} = $cookies->{$_} for keys %$cookies;
@@ -60,7 +60,7 @@ __END__
 
 =head1 NAME
 
-Voson::Plugin::Cookie - Cookie manipulation for Voson
+Nephia::Plugin::Cookie - Cookie manipulation for Nephia
 
 =head1 DESCRIPTION
 
@@ -69,7 +69,7 @@ This plugin provides cookie manipulation feature.
 =head1 SYNOPSIS
 
     package YourApp::Web;
-    use Voson plugins => ['Cookie'];
+    use Nephia plugins => ['Cookie'];
     app {
         my $count = cookie('count') || 0;
         $count++;

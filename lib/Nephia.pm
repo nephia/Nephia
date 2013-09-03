@@ -1,20 +1,20 @@
-package Voson;
+package Nephia;
 use 5.008005;
 use strict;
 use warnings;
-use Voson::Incognito;
+use Nephia::Incognito;
 
-our $VERSION = "0.01";
+our $VERSION = "0.80";
 
 sub import {
     my ($class, %opts) = @_;
     my $caller = caller;
-    Voson::Incognito->incognito(%opts, caller => $caller);
+    Nephia::Incognito->incognito(%opts, caller => $caller);
 }
 
 sub run {
     my $caller = caller;
-    Voson::Incognito->unmask($caller)->run;
+    Nephia::Incognito->unmask($caller)->run;
 }
 
 1;
@@ -24,11 +24,11 @@ __END__
 
 =head1 NAME
 
-Voson - A mini-sized WAF that aimed to substitute for Nephia
+Nephia - A mini-sized WAF that aimed to substitute for Nephia
 
 =head1 SYNOPSIS
 
-    use Voson plugins => [...];
+    use Nephia plugins => [...];
     app {
         my $req  = req;         ### Request object
         my $id   = param('id'); ### query-param that named "id" 
@@ -38,29 +38,29 @@ Voson - A mini-sized WAF that aimed to substitute for Nephia
 
 =head1 DESCRIPTION
 
-Voson is microcore architecture WAF. 
+Nephia is microcore architecture WAF. 
 
 =head1 GETTING STARTED
 
 Let's try to create your project.
 
-    voson-setup YourApp::Web
+    nephia-setup YourApp::Web
 
 Then, you may plackup on your project directory.
 
-Please see L<Voson::Setup::Plugin::Basic> for detail.
+Please see L<Nephia::Setup::Plugin::Basic> for detail.
 
 =head1 BOOTSTRAP A MINIMALIST STRUCTURE
 
 Use "--plugins Minimal" option to minimalistic setup.
 
-    voson-setup --plugins Minimal YourApp::Mini
+    nephia-setup --plugins Minimal YourApp::Mini
 
-Please see L<Voson::Setup::Plugin::Minimal> for detail.
+Please see L<Nephia::Setup::Plugin::Minimal> for detail.
 
 =head1 LOAD OPTIONS 
 
-Please see L<Voson::Core>.
+Please see L<Nephia::Core>.
 
 =head1 DSL
 
@@ -72,11 +72,11 @@ Specify code-block of your webapp.
 
 =head2 other two basic DSL
 
-Please see L<Voson::Plugin::Basic>.
+Please see L<Nephia::Plugin::Basic>.
 
 =head2 dispatcher DSL
 
-Please see L<Voson::Plugin::Dispatch>.
+Please see L<Nephia::Plugin::Dispatch>.
 
 =head1 EXPORTS
 

@@ -1,4 +1,4 @@
-package Voson::Context;
+package Nephia::Context;
 use strict;
 use warnings;
 
@@ -31,7 +31,7 @@ __END__
 
 =head1 NAME
 
-Voson::Context - Context Class for Voson
+Nephia::Context - Context Class for Nephia
 
 =head1 DESCRIPTION
 
@@ -39,7 +39,7 @@ HASHREF plus alpha
 
 =head1 SYNOPSIS
 
-    my $context = Voson::Context->new( foo => 'bar', hoge => [qw/fuga piyo/] );
+    my $context = Nephia::Context->new( foo => 'bar', hoge => [qw/fuga piyo/] );
     $context->get('foo');           ### 'bar'
     $context->get('hoge');          ### ['fuga', 'piyo'];
     $context->set(fizzbuzz => sub { 
@@ -57,9 +57,9 @@ HASHREF plus alpha
 
 =head2 new
 
-    my $context = Voson::Context->new( %items );
+    my $context = Nephia::Context->new( %items );
 
-Instantiate Voson::Context. Then, store specified items.
+Instantiate Nephia::Context. Then, store specified items.
 
 =head2 get
 

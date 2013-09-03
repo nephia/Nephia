@@ -1,13 +1,13 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Core;
+use Nephia::Core;
 use Plack::Test;
 use HTTP::Request::Common;
 
 {
-    package Voson::Plugin::HookTester;
-    use parent 'Voson::Plugin';
+    package Nephia::Plugin::HookTester;
+    use parent 'Nephia::Plugin';
     use Plack::Request;
 
     sub new {
@@ -44,7 +44,7 @@ use HTTP::Request::Common;
     }
 };
 
-my $v = Voson::Core->new(
+my $v = Nephia::Core->new(
     appname => 'MyApp',
     plugins => ['HookTester'],
     app => sub {

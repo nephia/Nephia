@@ -1,7 +1,7 @@
-package Voson::Setup::Plugin::Minimal;
+package Nephia::Setup::Plugin::Minimal;
 use strict;
 use warnings;
-use parent 'Voson::Setup::Plugin';
+use parent 'Nephia::Setup::Plugin';
 use File::Spec;
 
 sub fix_setup {
@@ -67,7 +67,7 @@ __DATA__
 package {{$self->appname}};
 use strict;
 use warnings;
-use Voson;
+use Nephia;
 
 our $VERSION = 0.01;
 
@@ -81,7 +81,7 @@ app {
 
 :::head1 NAME
 
-{{$self->appname}} - Web Application that powered by Voson
+{{$self->appname}} - Web Application that powered by Nephia
 
 :::head1 DESCRIPTION
 
@@ -103,7 +103,7 @@ it under the same terms as Perl itself.
 
 :::head1 SEE ALSO
 
-L<Voson>
+L<Nephia>
 
 :::cut
 
@@ -145,7 +145,7 @@ __END__
 
 =head1 NAME
 
-Voson::Setup::Plugin::Minimal - Minimal setup of Voson
+Nephia::Setup::Plugin::Minimal - Minimal setup of Nephia
 
 =head1 DESCRIPTION
 
@@ -153,13 +153,13 @@ Minimal setup plugin
 
 =head1 SYNOPSIS
 
-    $ voson-setup --plugins Minimal YourApp
+    $ nephia-setup --plugins Minimal YourApp
 
 =head1 ENABLED PLUGINS
 
 =over 4
 
-=item L<Voson::Plugin::Basic>
+=item L<Nephia::Plugin::Basic>
 
 =back
 

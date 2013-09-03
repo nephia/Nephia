@@ -1,4 +1,4 @@
-package Voson::Setup::Plugin;
+package Nephia::Setup::Plugin;
 use strict;
 use warnings;
 
@@ -28,16 +28,16 @@ __END__
 
 =head1 NAME
 
-Voson::Setup::Plugin - Base class of plugin for Voson::Setup
+Nephia::Setup::Plugin - Base class of plugin for Nephia::Setup
 
 =head1 DESCRIPTION
 
-If you want to create a new plugin for Voson::Setup, inherit this class.
+If you want to create a new plugin for Nephia::Setup, inherit this class.
 
 =head1 SYNOPSIS
 
-    package Voson::Setup::Plugin::MyWay;
-    use parent 'Voson::Setup::Plugin';
+    package Nephia::Setup::Plugin::MyWay;
+    use parent 'Nephia::Setup::Plugin';
     
     sub fix_setup {
         my $self = shift;
@@ -47,7 +47,7 @@ If you want to create a new plugin for Voson::Setup, inherit this class.
         ### append feature here
         ...
     }
-    sub bundle { qw/ Foo Bar / } ### bundle "Voson::Setup::Plugin::Foo" and "Voson::Setup::Plugin::Bar"
+    sub bundle { qw/ Foo Bar / } ### bundle "Nephia::Setup::Plugin::Foo" and "Nephia::Setup::Plugin::Bar"
 
 =head1 METHODS
 
@@ -57,11 +57,11 @@ Constructor.
 
 =head2 setup
 
-Returns a Voson::Setup instance.
+Returns a Nephia::Setup instance.
 
 =head2 fix_setup
 
-You have to override this method if you want to append some action to Voson::Setup.
+You have to override this method if you want to append some action to Nephia::Setup.
 
 =head2 bundle 
 

@@ -1,4 +1,4 @@
-package Voson::MetaTemplate;
+package Nephia::MetaTemplate;
 use strict;
 use warnings;
 use utf8;
@@ -42,7 +42,7 @@ sub process {
 
 =head1 NAME
 
-Voson::MetaTemplate - Meta Template Processor for Voson::Setup flavors
+Nephia::MetaTemplate - Meta Template Processor for Nephia::Setup flavors
 
 =head1 SYNOPSIS
 
@@ -62,7 +62,7 @@ A template in your flavor.
 And, in your flavor class.
 
     my $meta_template = '<html>...'; # meta template string
-    my $mt = Voson::MetaTemplate->new(
+    my $mt = Nephia::MetaTemplate->new(
         tag           => '{{ ... }}',
         arrow         => '@',
         argument      => 'val:...',
@@ -87,7 +87,7 @@ Then, $template is like as following.
 
 =head1 DESCRIPTION
 
-Voson::MetaTemplate is a Meta-Template Processor for helping you make your own nephia flavor.
+Nephia::MetaTemplate is a Meta-Template Processor for helping you make your own nephia flavor.
 
 =head1 AUTHOR
 

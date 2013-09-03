@@ -5,31 +5,31 @@ use Test::Exception;
 use File::Temp 'tempdir';
 use File::Spec;
 use Capture::Tiny 'capture';
-use Voson::Setup;
+use Nephia::Setup;
 
 my $tempdir = tempdir(CLEANUP => 1);
-my $setup = Voson::Setup->new(appname => 'MyApp::Web', approot => $tempdir);
+my $setup = Nephia::Setup->new(appname => 'MyApp::Web', approot => $tempdir);
 
 subtest basic => sub {
-    isa_ok $setup, 'Voson::Setup';
+    isa_ok $setup, 'Nephia::Setup';
     is $setup->appname, 'MyApp::Web';
     is_deeply [$setup->approot], [$tempdir];
     is_deeply [$setup->classfile], [qw/lib MyApp Web.pm/];
-    isa_ok $setup->action_chain, 'Voson::Chain';
+    isa_ok $setup->action_chain, 'Nephia::Chain';
     my @actions = $setup->action_chain;
     is_deeply [@actions], [];
     is_deeply $setup->deps, {
-        requires => ['Voson' => 0],
+        requires => ['Nephia' => 0],
         test => {
             requires => ['Test::More' => 0],
         },
     };
-    isa_ok $setup->meta_tmpl, 'Voson::MetaTemplate';
+    isa_ok $setup->meta_tmpl, 'Nephia::MetaTemplate';
 };
 
 subtest cpanfile => sub {
     my $cpanfile = $setup->cpanfile;
-    like $cpanfile, qr/requires \'Voson\' \=> 0\;/;
+    like $cpanfile, qr/requires \'Nephia\' \=> 0\;/;
     like $cpanfile, qr/on \'test\' \=> sub \{\n    requires \'Test\:\:More\' \=> 0\;\n}\;/;
 };
 
@@ -65,8 +65,8 @@ subtest misc => sub {
     like $setup->_spaces_for_nest, qr/^ {4}$/;
     is $setup->_normalize_appname('MyApp::Web'), 'MyApp-Web';
     is_deeply $setup->_resolve_approot('MyApp::Web'), [qw/. MyApp-Web/];
-    is $setup->_plugin_name_normalize('FooBar'), 'Voson::Setup::Plugin::FooBar';
-    is $setup->_plugin_name_normalize('Voson::Setup::Plugin::FooBar'), 'Voson::Setup::Plugin::FooBar';
+    is $setup->_plugin_name_normalize('FooBar'), 'Nephia::Setup::Plugin::FooBar';
+    is $setup->_plugin_name_normalize('Nephia::Setup::Plugin::FooBar'), 'Nephia::Setup::Plugin::FooBar';
 };
 
 done_testing;

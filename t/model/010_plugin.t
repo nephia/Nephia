@@ -2,18 +2,18 @@ use strict;
 use warnings;
 use Test::More;
 use Test::Exception;
-use Voson::Plugin;
-use Voson::Core;
+use Nephia::Plugin;
+use Nephia::Core;
 
 {
-    package Voson::Plugin::TestAlpha;
-    use parent 'Voson::Plugin';
+    package Nephia::Plugin::TestAlpha;
+    use parent 'Nephia::Plugin';
     sub exports { qw/ one / };
     sub one     { sub () { 1 } };
 }
 {
-    package Voson::Plugin::TestBeta;
-    use parent 'Voson::Plugin';
+    package Nephia::Plugin::TestBeta;
+    use parent 'Nephia::Plugin';
     sub needs   { qw/ TestAlpha / };
     sub exports { qw/ incr / };
     sub incr    { 
@@ -24,8 +24,8 @@ use Voson::Core;
     };
 }
 {
-    package Voson::Plugin::TestSeta;
-    use parent 'Voson::Plugin';
+    package Nephia::Plugin::TestSeta;
+    use parent 'Nephia::Plugin';
     sub requires { qw/one/ };
     sub two {
         sub ($) { one() + 1 };
@@ -33,21 +33,21 @@ use Voson::Core;
 }
     
 subtest basal => sub {
-    my $x = Voson::Plugin->new;
-    isa_ok $x, 'Voson::Plugin';
+    my $x = Nephia::Plugin->new;
+    isa_ok $x, 'Nephia::Plugin';
     is $x->exports, undef, 'not export anything';
 };
 
 subtest needs_failure => sub {
     throws_ok(
-        sub{Voson::Core->new(plugins => [qw/TestBeta/])}, 
-        qr/Voson::Plugin::TestBeta needs Voson::Plugin::TestAlpha, you have to load Voson::Plugin::TestAlpha first/
+        sub{Nephia::Core->new(plugins => [qw/TestBeta/])}, 
+        qr/Nephia::Plugin::TestBeta needs Nephia::Plugin::TestAlpha, you have to load Nephia::Plugin::TestAlpha first/
     );
 };
 
 subtest needs_ok => sub {
     my $v;
-    lives_ok(sub{$v = Voson::Core->new(plugins => [qw/TestAlpha TestBeta/])}, 'no error when loaded a plugin that needs other plugin');
+    lives_ok(sub{$v = Nephia::Core->new(plugins => [qw/TestAlpha TestBeta/])}, 'no error when loaded a plugin that needs other plugin');
     $v->export_dsl;
     is $v->dsl('one')->(), 1;
     is $v->dsl('incr')->(2), 3;
@@ -55,8 +55,8 @@ subtest needs_ok => sub {
 
 subtest requires_failure => sub {
     throws_ok(
-        sub { Voson::Core->new(plugins => [qw/TestSeta/]) },
-        qr/Voson::Plugin::TestSeta requires one DSL, you have to load some plugin that provides one DSL/
+        sub { Nephia::Core->new(plugins => [qw/TestSeta/]) },
+        qr/Nephia::Plugin::TestSeta requires one DSL, you have to load some plugin that provides one DSL/
     );
 };
 

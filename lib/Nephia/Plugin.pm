@@ -1,4 +1,4 @@
-package Voson::Plugin;
+package Nephia::Plugin;
 use strict;
 use warnings;
 use Carp;
@@ -28,7 +28,7 @@ sub _check_needs {
     my ($class, $app) = @_;
     local $Carp::CarpLevel = $Carp::CarpLevel + 1;
     for my $need ($class->needs) {
-        $need = $need =~ /^Voson::Plugin/ ? $need : "Voson::Plugin::$need";
+        $need = $need =~ /^Nephia::Plugin/ ? $need : "Nephia::Plugin::$need";
         croak "$class needs $need, you have to load $need first" unless $app->loaded_plugins->index($need) > 0;
     }
 }
@@ -54,13 +54,13 @@ __END__
 
 =head1 NAME
 
-Voson::Plugin - Base Class of Voson Plugin
+Nephia::Plugin - Base Class of Nephia Plugin
 
 =head1 DESCRIPTION
 
-This class is a base class of Voson Plugin. 
+This class is a base class of Nephia Plugin. 
 
-If you want to create a plugin for Voson, your plugin have to inherit it.
+If you want to create a plugin for Nephia, your plugin have to inherit it.
 
 =head1 METHODS
 
@@ -102,7 +102,7 @@ ytnobody E<lt>ytnobody@gmail.comE<gt>
 
 =head1 SEE ALSO
 
-L<Voson::Plugin>
+L<Nephia::Plugin>
 
 =cut
 

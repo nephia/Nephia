@@ -1,7 +1,7 @@
 #!perl
 use strict;
 use warnings;
-use Voson::Setup;
+use Nephia::Setup;
 use Getopt::Long;
 
 my $appname = shift(@ARGV);
@@ -13,7 +13,7 @@ GetOptions (
     "plugins=s" => \$plugins,
 );
 
-my $setup = Voson::Setup->new(appname => $appname, plugins => [split(/,/, $plugins)]);
+my $setup = Nephia::Setup->new(appname => $appname, plugins => [split(/,/, $plugins)]);
 $setup->do_task;
 
 sub help {
@@ -25,4 +25,4 @@ sub help {
 __DATA__
 Usage:
 
- voson-setup AppName [options]
+ nephia-setup AppName [options]

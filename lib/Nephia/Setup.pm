@@ -1,4 +1,4 @@
-package Voson::Setup;
+package Nephia::Setup;
 use strict;
 use warnings;
 use Archive::Extract;
@@ -9,9 +9,9 @@ use File::Fetch;
 use File::Spec;
 use File::Temp 'tempdir';
 use Module::Load ();
-use Voson::Chain;
-use Voson::Context;
-use Voson::MetaTemplate;
+use Nephia::Chain;
+use Nephia::Context;
+use Nephia::MetaTemplate;
 use URI;
 
 our $NEXT;
@@ -21,10 +21,10 @@ sub new {
     $opts{nest}           = 0;
     $opts{approot}      ||= $class->_resolve_approot($opts{appname});
     $opts{classfile}    ||= $class->_resolve_classfile($opts{appname});
-    $opts{action_chain}   = Voson::Chain->new(namespace => 'Voson::Setup::Action');
+    $opts{action_chain}   = Nephia::Chain->new(namespace => 'Nephia::Setup::Action');
     $opts{plugins}      ||= [];
     $opts{deps}         ||= $class->_build_deps;
-    $opts{meta_tmpl}      = Voson::MetaTemplate->new($opts{meta_tmpl} ? %{$opts{meta_tmpl}} : ());
+    $opts{meta_tmpl}      = Nephia::MetaTemplate->new($opts{meta_tmpl} ? %{$opts{meta_tmpl}} : ());
     my $self = bless {%opts}, $class;
     $self->_load_plugins;
     return $self
@@ -49,7 +49,7 @@ sub _resolve_classfile {
 
 sub _build_deps {
     {
-        requires => ['Voson' => 0],
+        requires => ['Nephia' => 0],
         test => {
             requires => ['Test::More' => 0],
         },
@@ -157,7 +157,7 @@ sub process_template {
 sub do_task {
     my $self = shift;
     $self->diag("\033[44m\033[1;36mBegin to setup %s\033[0m", $self->appname);
-    my $context = Voson::Context->new(
+    my $context = Nephia::Context->new(
         data_section => sub { Data::Section::Simple->new($_[0]) },
     );
     $self->{nest}++;
@@ -216,7 +216,7 @@ sub _load_plugin {
 
 sub _plugin_name_normalize {
     my ($self, $plugin_name) = @_;
-    my $plugin_class = $plugin_name =~ /^Voson::Setup::Plugin::/ ? $plugin_name : 'Voson::Setup::Plugin::'.$plugin_name;
+    my $plugin_class = $plugin_name =~ /^Nephia::Setup::Plugin::/ ? $plugin_name : 'Nephia::Setup::Plugin::'.$plugin_name;
     return $plugin_class;
 }
 
@@ -266,7 +266,7 @@ __END__
 
 =head1 NAME
 
-Voson::Setup - Base class of setup tool
+Nephia::Setup - Base class of setup tool
 
 =head1 DESCRIPTION
 
@@ -274,7 +274,7 @@ This class is used in setup tool internally.
 
 =head1 SYNOPSIS
 
-    my $setup = Voson::Setup->new(
+    my $setup = Nephia::Setup->new(
         appname => 'YourApp::Web',
         plugins => ['Normal'],
     );
@@ -299,7 +299,7 @@ Plugins for using when setup. Default is [] .
 Dependencies for application as hashref. Default is following.
 
     {
-        requires => ['Voson' => 0],
+        requires => ['Nephia' => 0],
         test => {
             requires => ['Test::More' => 0],
         },
@@ -325,16 +325,16 @@ Returns path for classfile as array.
 
 Example.
 
-    my $setup = Voson::Setup->new(appname => 'MyApp::Web');
+    my $setup = Nephia::Setup->new(appname => 'MyApp::Web');
     my @path = $setup->classfile; # ( 'lib', 'MyApp', 'Web.pm' );
 
 =head2 action_chain
 
-Returns action chain as L<Voson::Chain> object.
+Returns action chain as L<Nephia::Chain> object.
 
 =head2 meta_tmpl
 
-Returns L<Voson::MetaTemplate> object.
+Returns L<Nephia::MetaTemplate> object.
 
 =head2 makepath
 
@@ -342,7 +342,7 @@ Create specified directory recursively.
 
 Example.
 
-    my $setup = Voson::Setup->new(
+    my $setup = Nephia::Setup->new(
         appname => 'MyApp::Web'
     );
     $setup->makepath('misc', 'data', 'xml'); # create ./MyApp-Web/misc/data/xml
@@ -362,7 +362,7 @@ Process file-template.
 
 Example.
 
-    my $setup     = Voson::Setup->new(appname => 'MyApp::Web');
+    my $setup     = Nephia::Setup->new(appname => 'MyApp::Web');
     my $str       = 'Application name is "{{$self->appname}}"';
     my $processed = $setup->process_template($str); # 'Application name is "MyApp::Web"'
 

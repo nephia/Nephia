@@ -1,4 +1,4 @@
-package Voson::Response;
+package Nephia::Response;
 use strict;
 use warnings;
 use parent 'Plack::Response';

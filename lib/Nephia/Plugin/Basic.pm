@@ -1,7 +1,7 @@
-package Voson::Plugin::Basic;
+package Nephia::Plugin::Basic;
 use strict;
 use warnings;
-use parent 'Voson::Plugin';
+use parent 'Nephia::Plugin';
 
 sub exports {
     qw/req param/;
@@ -25,22 +25,22 @@ __END__
 
 =head1 NAME
 
-Voson::Plugin::Basic - A Voson plugin that provides two basic DSL
+Nephia::Plugin::Basic - A Nephia plugin that provides two basic DSL
 
 =head1 DESCRIPTION
 
-This plugin provides req and param DSL for Voson.
+This plugin provides req and param DSL for Nephia.
 
 =head1 DSL
 
 =head2 req
 
     app {
-        my $req = req; # returns Voson::Request object
+        my $req = req; # returns Nephia::Request object
         ...
     };
 
-Returns Voson::Request object.
+Returns Nephia::Request object.
 
 =head2 param
 
@@ -57,7 +57,7 @@ ytnobody E<lt>ytnobody@gmail.comE<gt>
 
 =head1 SEE ALSO
 
-L<Voson::Plugin>
+L<Nephia::Plugin>
 
 =cut
 

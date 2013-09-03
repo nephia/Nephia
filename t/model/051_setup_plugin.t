@@ -1,12 +1,12 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Setup;
+use Nephia::Setup;
 use File::Temp 'tempdir';
 
 {
-    package Voson::Setup::Plugin::TestAlpha;
-    use parent 'Voson::Setup::Plugin';
+    package Nephia::Setup::Plugin::TestAlpha;
+    use parent 'Nephia::Setup::Plugin';
     sub fix_setup {
         my $self = shift;
         $self->setup->action_chain->append(TestAlpha => \&test_alpha);
@@ -19,8 +19,8 @@ use File::Temp 'tempdir';
 }
 
 {
-    package Voson::Setup::Plugin::TestBeta;
-    use parent 'Voson::Setup::Plugin';
+    package Nephia::Setup::Plugin::TestBeta;
+    use parent 'Nephia::Setup::Plugin';
     sub bundle { qw/TestAlpha/ };
     sub fix_setup {
         my $self = shift;
@@ -39,13 +39,13 @@ use File::Temp 'tempdir';
 
 subtest 'simple' => sub {
     my $tempdir = tempdir(CLEANUP => 1);
-    my $setup = Voson::Setup->new(
+    my $setup = Nephia::Setup->new(
         appname => 'Oreore',
         approot => $tempdir,
         plugins => ['TestAlpha'],
     );
 
-    is $setup->action_chain->from('TestAlpha'), 'Voson::Setup::Plugin::TestAlpha';
+    is $setup->action_chain->from('TestAlpha'), 'Nephia::Setup::Plugin::TestAlpha';
     $setup->do_task;
     my $dummyfile = File::Spec->catfile($setup->approot, qw/misc foo.txt/);
     open my $fh, '<', $dummyfile or die "could not open file $dummyfile : $!";
@@ -56,14 +56,14 @@ subtest 'simple' => sub {
 
 subtest 'bundle' => sub {
     my $tempdir = tempdir(CLEANUP => 1);
-    my $setup = Voson::Setup->new(
+    my $setup = Nephia::Setup->new(
         appname => 'Oreore',
         approot => $tempdir,
         plugins => ['TestBeta'],
     );
 
-    is $setup->action_chain->from('TestAlpha'), 'Voson::Setup::Plugin::TestAlpha';
-    is $setup->action_chain->from('TestBeta1'), 'Voson::Setup::Plugin::TestBeta';
+    is $setup->action_chain->from('TestAlpha'), 'Nephia::Setup::Plugin::TestAlpha';
+    is $setup->action_chain->from('TestBeta1'), 'Nephia::Setup::Plugin::TestBeta';
     $setup->do_task;
     my $dummyfile = File::Spec->catfile($setup->approot, qw/misc foo.txt/);
     open my $fh, '<', $dummyfile or die "could not open file $dummyfile : $!";

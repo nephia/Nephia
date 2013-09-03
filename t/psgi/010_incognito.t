@@ -1,18 +1,18 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Incognito;
+use Nephia::Incognito;
 use Plack::Test;
 use HTTP::Request::Common;
 
-Voson::Incognito->incognito(
+Nephia::Incognito->incognito(
     app => sub {
         my $name = param('name') || 'tonkichi';
         [200,[],"Hello, $name"];
     },
 );
 
-my $v = Voson::Incognito->unmask;
+my $v = Nephia::Incognito->unmask;
 my $app = $v->run;
 
 subtest default => sub {

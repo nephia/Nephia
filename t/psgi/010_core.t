@@ -1,11 +1,11 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Core;
+use Nephia::Core;
 use Plack::Test;
 use HTTP::Request::Common;
 
-my $v = Voson::Core->new(
+my $v = Nephia::Core->new(
     appname => 'MyApp',
     app => sub {
         my $name = param('name') || 'tonkichi';

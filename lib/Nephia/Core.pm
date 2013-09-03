@@ -1,10 +1,10 @@
-package Voson::Core;
+package Nephia::Core;
 use strict;
 use warnings;
-use Voson::Request;
-use Voson::Response;
-use Voson::Context;
-use Voson::Chain;
+use Nephia::Request;
+use Nephia::Response;
+use Nephia::Context;
+use Nephia::Chain;
 use Scalar::Util ();
 use Module::Load ();
 
@@ -12,9 +12,9 @@ sub new {
     my ($class, %opts) = @_;
     $opts{caller}       ||= caller();
     $opts{plugins}      ||= [];
-    $opts{action_chain}   = Voson::Chain->new(namespace => 'Voson::Action');
-    $opts{filter_chain}   = Voson::Chain->new(namespace => 'Voson::Filter');
-    $opts{loaded_plugins} = Voson::Chain->new(namespace => 'Voson::Plugin', name_normalize => 0);
+    $opts{action_chain}   = Nephia::Chain->new(namespace => 'Nephia::Action');
+    $opts{filter_chain}   = Nephia::Chain->new(namespace => 'Nephia::Filter');
+    $opts{loaded_plugins} = Nephia::Chain->new(namespace => 'Nephia::Plugin', name_normalize => 0);
     $opts{dsl}            = {};
     my $self = bless {%opts}, $class;
     $self->action_chain->append(Core => $class->can('_action'));
@@ -24,7 +24,7 @@ sub new {
 
 sub export_dsl {
     my $self = shift; 
-    my $dummy_context = Voson::Context->new;
+    my $dummy_context = Nephia::Context->new;
     $self->_load_dsl($dummy_context);
     my $class = $self->caller_class;
     no strict   qw/refs subs/;
@@ -40,7 +40,7 @@ sub _load_plugins {
     my $self = shift;
     my @plugins = (qw/Basic Cookie/, @{$self->{plugins}});
     while ($plugins[0]) {
-        my $plugin_class = 'Voson::Plugin::'. shift(@plugins);
+        my $plugin_class = 'Nephia::Plugin::'. shift(@plugins);
         my $conf = {};
         if ($plugins[0]) {
             $conf = shift(@plugins) if ref($plugins[0]) eq 'HASH';
@@ -57,7 +57,7 @@ sub loaded_plugins {
 sub _load_plugin {
     my ($self, $plugin, $opts) = @_;
     $opts ||= {};
-    Module::Load::load($plugin) unless $plugin->isa('Voson::Plugin');
+    Module::Load::load($plugin) unless $plugin->isa('Nephia::Plugin');
     my $obj = $plugin->new(app => $self, %$opts);
     return $obj;
 }
@@ -111,8 +111,8 @@ sub run {
     my $class = $self->{caller};
     return sub {
         my $env     = shift;
-        my $req     = Voson::Request->new($env);
-        my $context = Voson::Context->new(req => $req);
+        my $req     = Nephia::Request->new($env);
+        my $context = Nephia::Context->new(req => $req);
         $self->_load_dsl($context);
         my $res;
         for my $action ($self->{action_chain}->as_array) {
@@ -120,7 +120,7 @@ sub run {
             last if $res;
         }
         $res ||= $context->get('res');
-        $res = Scalar::Util::blessed($res) ? $res : Voson::Response->new(@$res);
+        $res = Scalar::Util::blessed($res) ? $res : Nephia::Response->new(@$res);
         for my $filter ($self->{filter_chain}->as_array) {
             my $body = ref($res->body) eq 'ARRAY' ? $res->body->[0] : $res->body;
             $res->body($filter->($self, $body));
@@ -137,15 +137,15 @@ __END__
 
 =head1 NAME
 
-Voson::Core - Core Class of Voson
+Nephia::Core - Core Class of Nephia
 
 =head1 DESCRIPTION
 
-Core Class of Voson, Object Oriented Interface Included.
+Core Class of Nephia, Object Oriented Interface Included.
 
 =head1 SYNOPSIS
 
-    my $v = Voson::Core->new( 
+    my $v = Nephia::Core->new( 
         appname => 'YourApp::Web',
         plugins => ['JSON', 'HashHandler' => { ... } ],
     );
@@ -163,7 +163,7 @@ Your Application Name. Default is caller class.
 
 =head2 plugins
 
-Voson plugins you want to load.
+Nephia plugins you want to load.
 
 =head2 app
 
@@ -173,11 +173,11 @@ Application as coderef.
 
 =head2 action_chain
 
-Returns a Voson::Chain object for specifying order of actions.
+Returns a Nephia::Chain object for specifying order of actions.
 
 =head2 filter_chain
 
-Returns a Voson::Chain object for specifying order of filters.
+Returns a Nephia::Chain object for specifying order of filters.
 
 =head2 caller_class
 
@@ -205,9 +205,9 @@ Returns an application as coderef (include plugins, actions, and filters).
 
 =head1 HOOK MECHANISM
 
-Voson::Core includes hook mechanism itself. These provided as L<Voson::Chain> object.
+Nephia::Core includes hook mechanism itself. These provided as L<Nephia::Chain> object.
 
-Voson::Core has action_chain and filter_chain. Look following ASCII Art Image.
+Nephia::Core has action_chain and filter_chain. Look following ASCII Art Image.
 
     
         [HTTP Request]                              [HTTP Response]
@@ -216,7 +216,7 @@ Voson::Core has action_chain and filter_chain. Look following ASCII Art Image.
            v                                                   |
        /------------------------------------\    /---------------------\
        |                                    |    |                     |
-       |           Voson::Context           |--->|  Voson::Response    |
+       |           Nephia::Context          |--->|  Nephia::Response   |
        |                                    |    |                     |
        \------------------------------------/    \---------------------/
            |  A    |  A     |   A    |  A           |           A
@@ -240,9 +240,9 @@ Voson::Core has action_chain and filter_chain. Look following ASCII Art Image.
        \-----------------------------------/   \-------------------------/
     
 
-Actions (and App) in action_chain affects context. Then, Voson::Response object creates from context. 
+Actions (and App) in action_chain affects context. Then, Nephia::Response object creates from context. 
 
-Afterwords, filters in filter_chain affects content string in Voson::Response.
+Afterwords, filters in filter_chain affects content string in Nephia::Response.
 
 =head1 AUTHOR
 
@@ -250,6 +250,6 @@ ytnobody E<lt>ytnobody@gmail.comE<gt>
 
 =head1 SEE ALSO
 
-L<Voson::Chain>
+L<Nephia::Chain>
 
 =cut

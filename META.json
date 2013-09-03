@@ -4,7 +4,7 @@
       "ytnobody <ytnobody@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.5.5, CPAN::Meta::Converter version 2.130880",
+   "generated_by" : "Minilla/v0.6.3, CPAN::Meta::Converter version 2.132140",
    "license" : [
       "perl_5"
    ],
@@ -12,7 +12,7 @@
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
       "version" : "2"
    },
-   "name" : "Voson",
+   "name" : "Nephia",
    "no_index" : {
       "directory" : [
          "t",
@@ -64,14 +64,14 @@
    "release_status" : "unstable",
    "resources" : {
       "bugtracker" : {
-         "web" : "https://github.com/ytnobody/Voson/issues"
+         "web" : "https://github.com/ytnobody/Nephia/issues"
       },
-      "homepage" : "https://github.com/ytnobody/Voson",
+      "homepage" : "https://github.com/ytnobody/Nephia",
       "repository" : {
          "type" : "git",
-         "url" : "git://github.com/ytnobody/Voson.git",
-         "web" : "https://github.com/ytnobody/Voson"
+         "url" : "git://github.com/ytnobody/Nephia.git",
+         "web" : "https://github.com/ytnobody/Nephia"
       }
    },
-   "version" : "0.01"
+   "version" : "0.80"
 }

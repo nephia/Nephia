@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use Voson::Core;
+use Nephia::Core;
 use t::Util 'mock_env';
 
 my $env = mock_env;
@@ -12,15 +12,15 @@ my $app = sub {
 };
 
 subtest normal => sub {
-    my $v = Voson::Core->new(app => $app);
+    my $v = Nephia::Core->new(app => $app);
 
-    isa_ok $v, 'Voson::Core';
+    isa_ok $v, 'Nephia::Core';
     is $v->caller_class, __PACKAGE__;
-    isa_ok $v->loaded_plugins, 'Voson::Chain';
-    isa_ok $v->action_chain, 'Voson::Chain';
-    isa_ok $v->filter_chain, 'Voson::Chain';
+    isa_ok $v->loaded_plugins, 'Nephia::Chain';
+    isa_ok $v->action_chain, 'Nephia::Chain';
+    isa_ok $v->filter_chain, 'Nephia::Chain';
     is $v->dsl, $v->{dsl};
-    is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Voson::Plugin::Basic Voson::Plugin::Cookie]], 'Basic and Cookie plugins loaded';
+    is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie]], 'Basic and Cookie plugins loaded';
     is $v->app, $app;
 
     my $psgi = $v->run;
@@ -36,15 +36,15 @@ subtest normal => sub {
 };
 
 subtest caller_class => sub {
-    my $v = Voson::Core->new(app => $app, caller => 'MyApp');
-    isa_ok $v, 'Voson::Core';
+    my $v = Nephia::Core->new(app => $app, caller => 'MyApp');
+    isa_ok $v, 'Nephia::Core';
     is $v->caller_class, 'MyApp';
 };
 
 subtest load_plugin => sub {
     {
-        package Voson::Plugin::Test;
-        use parent 'Voson::Plugin';
+        package Nephia::Plugin::Test;
+        use parent 'Nephia::Plugin';
         sub new {
             my ($class, %opts) = @_;
             my $self = $class->SUPER::new(%opts);
@@ -58,9 +58,9 @@ subtest load_plugin => sub {
         };
     };
 
-    my $v = Voson::Core->new(plugins => [Test => {world => 'MyHome'}], app => $app);
-    isa_ok $v, 'Voson::Core';
-    is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Voson::Plugin::Basic Voson::Plugin::Cookie Voson::Plugin::Test]], 'plugins';
+    my $v = Nephia::Core->new(plugins => [Test => {world => 'MyHome'}], app => $app);
+    isa_ok $v, 'Nephia::Core';
+    is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie Nephia::Plugin::Test]], 'plugins';
 };
 
 done_testing;

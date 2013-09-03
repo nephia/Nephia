@@ -1,4 +1,4 @@
-package Voson::Request;
+package Nephia::Request;
 use strict;
 use warnings;
 use parent 'Plack::Request';
@@ -93,7 +93,7 @@ __END__
 
 =head1 NAME
 
-Voson::Request - Request Class for Voson
+Nephia::Request - Request Class for Nephia
 
 =head1 DESCRIPTION
 
@@ -101,7 +101,7 @@ A subclass of Plack::Request
 
 =head1 SYNOPSIS
 
-    my $req = Voson::Request->new( $env );
+    my $req = Nephia::Request->new( $env );
 
 =head1 AUTHOR
 

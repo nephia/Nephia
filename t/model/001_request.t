@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use utf8;
-use Voson::Request;
+use Nephia::Request;
 use Encode;
 use Test::More;
 
@@ -9,7 +9,7 @@ my $query = 'foo=%E3%81%BB%E3%81%92&bar=%E3%81%B5%E3%81%8C1&bar=%E3%81%B5%E3%81%
 my $host  = 'example.com';
 my $path  = '/hoge/fuga';
 
-my $req = Voson::Request->new({
+my $req = Nephia::Request->new({
     QUERY_STRING   => $query,
     REQUEST_METHOD => 'GET',
     HTTP_HOST      => $host,
@@ -17,7 +17,7 @@ my $req = Voson::Request->new({
 });
 
 subtest 'isa' => sub {
-    isa_ok $req, 'Voson::Request';
+    isa_ok $req, 'Nephia::Request';
     isa_ok $req, 'Plack::Request';
 };
 

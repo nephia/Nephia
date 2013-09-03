@@ -1,10 +1,10 @@
 # NAME
 
-Voson - A mini-sized WAF that aimed to substitute for Nephia
+Nephia - A mini-sized WAF that aimed to substitute for Nephia
 
 # SYNOPSIS
 
-    use Voson plugins => [...];
+    use Nephia plugins => [...];
     app {
         my $req  = req;         ### Request object
         my $id   = param('id'); ### query-param that named "id" 
@@ -14,29 +14,29 @@ Voson - A mini-sized WAF that aimed to substitute for Nephia
 
 # DESCRIPTION
 
-Voson is microcore architecture WAF. 
+Nephia is microcore architecture WAF. 
 
 # GETTING STARTED
 
 Let's try to create your project.
 
-    voson-setup YourApp::Web
+    nephia-setup YourApp::Web
 
 Then, you may plackup on your project directory.
 
-Please see [Voson::Setup::Plugin::Basic](http://search.cpan.org/perldoc?Voson::Setup::Plugin::Basic) for detail.
+Please see [Nephia::Setup::Plugin::Basic](http://search.cpan.org/perldoc?Nephia::Setup::Plugin::Basic) for detail.
 
 # BOOTSTRAP A MINIMALIST STRUCTURE
 
 Use "--plugins Minimal" option to minimalistic setup.
 
-    voson-setup --plugins Minimal YourApp::Mini
+    nephia-setup --plugins Minimal YourApp::Mini
 
-Please see [Voson::Setup::Plugin::Minimal](http://search.cpan.org/perldoc?Voson::Setup::Plugin::Minimal) for detail.
+Please see [Nephia::Setup::Plugin::Minimal](http://search.cpan.org/perldoc?Nephia::Setup::Plugin::Minimal) for detail.
 
 # LOAD OPTIONS 
 
-Please see [Voson::Core](http://search.cpan.org/perldoc?Voson::Core).
+Please see [Nephia::Core](http://search.cpan.org/perldoc?Nephia::Core).
 
 # DSL
 
@@ -48,11 +48,11 @@ Specify code-block of your webapp.
 
 ## other two basic DSL
 
-Please see [Voson::Plugin::Basic](http://search.cpan.org/perldoc?Voson::Plugin::Basic).
+Please see [Nephia::Plugin::Basic](http://search.cpan.org/perldoc?Nephia::Plugin::Basic).
 
 ## dispatcher DSL
 
-Please see [Voson::Plugin::Dispatch](http://search.cpan.org/perldoc?Voson::Plugin::Dispatch).
+Please see [Nephia::Plugin::Dispatch](http://search.cpan.org/perldoc?Nephia::Plugin::Dispatch).
 
 # EXPORTS
 

@@ -1,14 +1,14 @@
-package Voson::Incognito;
+package Nephia::Incognito;
 use strict;
 use warnings;
-use Voson::Core;
+use Nephia::Core;
 
 our $SPACE = {};
 
 sub incognito {
     my ($class, %opts) = @_;
     $opts{caller}  ||= caller();
-    my $instance = Voson::Core->new(%opts);
+    my $instance = Nephia::Core->new(%opts);
     $instance->export_dsl;
     my $name = $class->_incognito_namespace($instance->caller_class);
     $SPACE->{$name} = $instance;
@@ -24,7 +24,7 @@ sub unmask {
 
 sub _incognito_namespace { 
     my ($class, $appname) = @_;
-    'Voson::Incognito::'.$appname.'::'. $$
+    'Nephia::Incognito::'.$appname.'::'. $$
 } 
 
 1;
@@ -35,31 +35,31 @@ __END__
 
 =head1 NAME
 
-Voson::Incognito - A mechanism that conceal a Voson instance into namespace
+Nephia::Incognito - A mechanism that conceal a Nephia instance into namespace
 
 =head1 DESCRIPTION
 
-A concealer for Voson.
+A concealer for Nephia.
 
 =head1 SYNOPSIS
 
-    Voson::Incognito->incognito( caller => 'MyApp', plugins => [...], app => sub {...} );
-    my $voson_instance = Voson::Incognito->unmask('MyApp');
-    $voson_instance->run;
+    Nephia::Incognito->incognito( caller => 'MyApp', plugins => [...], app => sub {...} );
+    my $nephia_instance = Nephia::Incognito->unmask('MyApp');
+    $nephia_instance->run;
 
 =head1 METHODS
 
 =head2 incognito
 
-    Voson::Incognito->incognito( %opts );
+    Nephia::Incognito->incognito( %opts );
 
-Conceal a Voson instance into namespace. See L<Voson::Core> about option.
+Conceal a Nephia instance into namespace. See L<Nephia::Core> about option.
 
 =head2 unmask
 
-    my $instance = Voson::Incognito->unmask( $appname );
+    my $instance = Nephia::Incognito->unmask( $appname );
 
-Returns a Voson instance that has a specified appname.
+Returns a Nephia instance that has a specified appname.
 
 =head1 AUTHOR
 
