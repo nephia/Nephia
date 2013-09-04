@@ -134,7 +134,7 @@ sub run {
         return $res->finalize;
     };
     for my $builder ($self->builder_chain->as_array) {
-        $app = $builder->($app);
+        $app = $builder->($self, $app);
     }
     return $app;
 }

@@ -73,7 +73,7 @@ subtest load_plugin_with_builder_chain => sub {
             my $self = $class->SUPER::new(%opts);
             my $world = $opts{world};
             $self->app->builder_chain->append(Slate2 => sub {
-                my $app = shift;
+                my ($self, $app) = @_;
                 builder {
                     enable 'SimpleContentFilter', filter => sub { s/World/$world/ };
                     $app;
