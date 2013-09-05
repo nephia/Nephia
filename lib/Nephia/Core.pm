@@ -30,7 +30,7 @@ sub export_dsl {
     my $class = $self->caller_class;
     no strict   qw/refs subs/;
     no warnings qw/redefine/;
-    *{$class.'::run'} = sub ()  { $self->run };
+    *{$class.'::run'} = sub (;%)  { my $subclass = shift; $self->run(@_) };
     *{$class.'::app'} = sub (&) {
         my $app = shift;
         $self->{app} = $app;
