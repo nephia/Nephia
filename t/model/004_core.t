@@ -93,8 +93,8 @@ subtest load_plugin_with_builder_chain => sub {
 subtest with_conf => sub {
     my $v = Nephia::Core->new(
         app => sub {
-            my $self = shift;
-            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$self->{config}{message}]];
+            my $c = shift;
+            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$c->{config}{message}]];
         },
     );
     my $res = $v->run(message => 'so good!')->($env);

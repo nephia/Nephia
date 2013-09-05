@@ -114,7 +114,6 @@ sub _load_dsl {
 
 sub run {
     my ($self, %config) = @_;
-    $self->{config} = {%config};
     my $class = $self->{caller};
     my $app = sub {
         my $env     = shift;
@@ -218,14 +217,14 @@ Returns pairs of name and coderef of DSL as hashref.
 
 Returns an application as coderef (include plugins, actions, filters, and builders).
 
-If you specify some arguments, these will be stored as config into application instance.
+If you specify some arguments, these will be stored as config into context.
 
 Look at following example. This psgi application returns 'Nephia is so good!'.
 
     my $v = Nephia::Core->new(
         app => sub {
-            my $self = shift;
-            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$self->{config}{message}]];
+            my $c = shift;
+            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$c->{config}{message}]];
         },
     );
     $v->run(message => 'so good!');
