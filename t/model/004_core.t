@@ -90,4 +90,15 @@ subtest load_plugin_with_builder_chain => sub {
     is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, MyHome!']];
 };
 
+subtest with_conf => sub {
+    my $v = Nephia::Core->new(
+        app => sub {
+            my $self = shift;
+            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$self->{config}{message}]];
+        },
+    );
+    my $res = $v->run(message => 'so good!')->($env);
+    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Nephia is so good!']];
+};
+
 done_testing;

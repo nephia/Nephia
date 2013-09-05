@@ -113,12 +113,13 @@ sub _load_dsl {
 }
 
 sub run {
-    my $self  = shift;
+    my ($self, %config) = @_;
+    $self->{config} = {%config};
     my $class = $self->{caller};
     my $app = sub {
         my $env     = shift;
         my $req     = Nephia::Request->new($env);
-        my $context = Nephia::Context->new(req => $req);
+        my $context = Nephia::Context->new(req => $req, config => {%config});
         $self->_load_dsl($context);
         my $res;
         for my $action ($self->{action_chain}->as_array) {
@@ -216,6 +217,19 @@ Returns pairs of name and coderef of DSL as hashref.
 =head2 run
 
 Returns an application as coderef (include plugins, actions, filters, and builders).
+
+If you specify some arguments, these will be stored as config into application instance.
+
+Look at following example. This psgi application returns 'Nephia is so good!'.
+
+    my $v = Nephia::Core->new(
+        app => sub {
+            my $self = shift;
+            [200, ['Content-Type' => 'text/plain'], ['Nephia is '.$self->{config}{message}]];
+        },
+    );
+    $v->run(message => 'so good!');
+    
 
 =head1 HOOK MECHANISM
 
