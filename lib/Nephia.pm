@@ -14,7 +14,7 @@ sub import {
 
 sub run {
     my $caller = caller;
-    Nephia::Incognito->unmask($caller)->run;
+    Nephia::Incognito->unmask($caller)->run(@_);
 }
 
 1;
