@@ -12,5 +12,6 @@ on 'test' => sub {
     requires 'Test::Exception';
     requires 'Test::WWW::Mechanize::PSGI';
     requires 'File::Temp';
+    requires 'Capture::Tiny';
 };
 
