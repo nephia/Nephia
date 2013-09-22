@@ -43,7 +43,7 @@ If you want to create a new plugin for Nephia::Setup, inherit this class.
         my $self = shift;
         $self->SUPER::fix_setup;
         my $setup = $self->setup;
-        my $chain = $setup->chain;
+        my $chain = $setup->action_chain;
         ### append feature here
         ...
     }
