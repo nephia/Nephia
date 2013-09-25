@@ -1,5 +1,6 @@
 requires 'perl', '5.008001';
 requires 'Plack';
+requires 'Plack::Request::WithEncoding';
 requires 'Module::Load';
 requires 'Data::Section::Simple';
 requires 'URL::Encode';

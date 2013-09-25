@@ -1,7 +1,7 @@
 package Nephia::Request;
 use strict;
 use warnings;
-use parent 'Plack::Request';
+use parent 'Plack::Request::WithEncoding';
 use Encode;
 use Hash::MultiValue;
 use URL::Encode;
