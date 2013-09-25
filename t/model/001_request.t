@@ -29,8 +29,8 @@ subtest 'normal' => sub {
 };
 
 subtest 'accessor' => sub {
-    ok !Encode::is_utf8($req->param_raw('foo')), 'not decoded';
-    ok !Encode::is_utf8($req->parameters_raw->{'foo'}), 'not decoded';
+    ok !Encode::is_utf8($req->raw_param('foo')), 'not decoded';
+    ok !Encode::is_utf8($req->raw_parameters->{'foo'}), 'not decoded';
 };
 
 subtest 'uri' => sub {
