@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.82 2013-10-04T06:30:26Z
+    - feature : implement Nephia::Chain->fetch($name)
+
 0.81 2013-10-04T03:24:06Z
     - feature : add redirect dsl that provided from Nephia::Plugin::Basic
 
