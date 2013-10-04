@@ -70,6 +70,14 @@ sub as_array {
     return @{$self->{chain}};
 }
 
+sub fetch {
+    my ($self, $plugin) = @_;
+    for my $obj (@{$self->{chain}}) {
+        return $obj if ref($obj) eq $plugin;
+    }
+    return undef;
+}
+
 sub _inject {
     local $Carp::CarpLevel = $Carp::CarpLevel + 2;
     my ($self, $search, $after, @opts) = @_;

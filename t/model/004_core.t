@@ -21,7 +21,10 @@ subtest normal => sub {
     isa_ok $v->filter_chain, 'Nephia::Chain';
     is $v->dsl, $v->{dsl};
     is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie]], 'Basic and Cookie plugins loaded';
+    is ref($v->loaded_plugins->fetch('Nephia::Plugin::Basic')), 'Nephia::Plugin::Basic', 'Fetch Basic plugin object';
+    is $v->loaded_plugins->fetch('Nephia::Plugin::UnknownPlugin'), undef, 'Failed fetch (plugin does not exists)';
     is $v->app, $app;
+
 
     my $psgi = $v->run;
     isa_ok $psgi, 'CODE';
