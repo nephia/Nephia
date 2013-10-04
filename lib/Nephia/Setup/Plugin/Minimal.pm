@@ -69,7 +69,7 @@ use strict;
 use warnings;
 use Nephia;
 
-our $VERSION = 0.80;
+our $VERSION = 0.81;
 
 app {
     [200, [], 'Hello, World!'];

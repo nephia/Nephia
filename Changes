@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.81 2013-10-04T03:24:06Z
+    - feature : add redirect dsl that provided from Nephia::Plugin::Basic
+
 0.80 2013-09-28T22:51:09Z
 
     - MAJOR VERSION UP. Old version is PrimalNephia of github. (https://github.com/ytnobody/PrimalNephia)
