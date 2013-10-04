@@ -4,7 +4,7 @@ use warnings;
 use parent 'Nephia::Plugin';
 
 sub exports {
-    qw/req param/;
+    qw/req param redirect/;
 }
 
 sub req {
@@ -17,6 +17,11 @@ sub param {
     return sub (;$) {$_[0] ? $context->{req}->param($_[0]) : $context->{req}->parameters};
 }
 
+sub redirect {
+    my ($self, $context) = @_;
+    return sub ($) {[303, [Location => $_[0]], []]};
+}
+
 1;
 
 __END__
@@ -25,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Nephia::Plugin::Basic - A Nephia plugin that provides two basic DSL
+Nephia::Plugin::Basic - A Nephia plugin that provides basic DSL
 
 =head1 DESCRIPTION
 
@@ -50,6 +55,14 @@ Returns Nephia::Request object.
     };
 
 Returns query-parameter.
+
+=head2 redirect 
+
+    app {
+        redirect '/to/some_path';
+    };
+
+Returns response object with Location header.
 
 =head1 AUTHOR
 

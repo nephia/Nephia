@@ -27,7 +27,7 @@ subtest normal => sub {
     isa_ok $psgi, 'CODE';
 
     $v->export_dsl;
-    can_ok __PACKAGE__, qw/run app req param/;
+    can_ok __PACKAGE__, qw/run app req param redirect/;
 
     isa_ok $v->run, 'CODE';
     my $res = $v->run->($env);

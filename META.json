@@ -4,7 +4,7 @@
       "ytnobody <ytnobody@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Minilla/v0.6.5, CPAN::Meta::Converter version 2.132510",
+   "generated_by" : "Minilla/v0.6.3, CPAN::Meta::Converter version 2.132140",
    "license" : [
       "perl_5"
    ],
@@ -75,7 +75,7 @@
          "web" : "https://github.com/nephia/Nephia"
       }
    },
-   "version" : "0.80",
+   "version" : "0.81",
    "x_contributors" : [
       "papix <mail@papix.net>"
    ]
