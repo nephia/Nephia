@@ -7,13 +7,12 @@ use Getopt::Long;
 my $appname = shift(@ARGV);
 help() unless $appname;
 
-my $plugins = 'Minimal';
-
+my $plugins;
 GetOptions (
     "plugins=s" => \$plugins,
 );
 
-my $setup = Nephia::Setup->new(appname => $appname, plugins => [split(/,/, $plugins)]);
+my $setup = Nephia::Setup->new(appname => $appname, plugins => ['Minimal', split(/,/, $plugins)]);
 $setup->do_task;
 
 sub help {
@@ -25,4 +24,4 @@ sub help {
 __DATA__
 Usage:
 
- nephia-setup AppName [options]
+  nephia-setup AppName [--plugins=<plugin>...]
