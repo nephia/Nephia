@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.83 2013-10-05T23:13:23Z
+    - bug fix : reset VERSION of skelton
+
 0.82 2013-10-04T06:30:26Z
     - feature : implement Nephia::Chain->fetch($name)
 

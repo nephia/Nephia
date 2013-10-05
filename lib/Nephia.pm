@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Nephia::Incognito;
 
-our $VERSION = "0.82";
+our $VERSION = "0.83";
 
 sub import {
     my ($class, %opts) = @_;
