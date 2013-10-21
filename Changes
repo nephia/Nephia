@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.84 2013-10-21T17:07:04Z
+    - feature : add call method and Nephia::Container
+
 0.83 2013-10-05T23:13:23Z
     - bug fix : reset VERSION of skelton
 
