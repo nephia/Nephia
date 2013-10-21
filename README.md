@@ -63,6 +63,14 @@ In app.psgi, run() method returns your webapp as coderef.
     use YourApp::Web;
     YourApp::Web->run;
 
+# CLASS METHOD
+
+## call
+
+Returns external logic as coderef.
+
+    my $external_logic = Nephia->call('C::Root#index');
+
 # LICENSE
 
 Copyright (C) ytnobody.

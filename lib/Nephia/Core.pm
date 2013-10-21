@@ -5,6 +5,7 @@ use Nephia::Request;
 use Nephia::Response;
 use Nephia::Context;
 use Nephia::Chain;
+use Nephia::Container;
 use Scalar::Util ();
 use Module::Load ();
 
@@ -12,11 +13,13 @@ sub new {
     my ($class, %opts) = @_;
     $opts{caller}       ||= caller();
     $opts{plugins}      ||= [];
+    $opts{config}       ||= {};
     $opts{action_chain}   = Nephia::Chain->new(namespace => 'Nephia::Action');
     $opts{filter_chain}   = Nephia::Chain->new(namespace => 'Nephia::Filter');
     $opts{builder_chain}  = Nephia::Chain->new(namespace => 'Nephia::Builder');
     $opts{loaded_plugins} = Nephia::Chain->new(namespace => 'Nephia::Plugin', name_normalize => 0);
     $opts{dsl}            = {};
+    $opts{external_classes} = {};
     my $self = bless {%opts}, $class;
     $self->action_chain->append(Core => $class->can('_action'));
     $self->_load_plugins;
@@ -99,6 +102,30 @@ sub dsl {
     return $key ? $self->{dsl}{$key} : $self->{dsl};
 }
 
+sub container {
+    my $self = shift;
+    $self->{container} ||= Nephia::Container->new(core => $self);
+    $self->{container};
+}
+
+sub call {
+    my ($self, $codepath) = @_;
+    my ($class, $method) = $codepath =~ /^(.+)\#(.+)$/;
+    $class = sprintf('%s::%s', $self->caller_class, $class) unless $class =~ /^\+/;
+    $class =~ s/^\+//;
+    unless ($self->{external_classes}{$class}) {
+        Module::Load::load($class) unless $class->isa($class);
+        $self->{external_classes}{$class} = 1;
+    }
+    my $code = $class->can($method);
+    sub {
+        my $context = shift;
+        $self->_load_dsl($context);
+        my $container = $self->container;
+        $code->($container, $context);
+    };
+}
+
 sub _load_dsl {
     my ($self, $context) = @_;
     my $class = $self->caller_class;
@@ -114,11 +141,12 @@ sub _load_dsl {
 
 sub run {
     my ($self, %config) = @_;
+    $self->{config} = { %{$self->{config}}, %config };
     my $class = $self->{caller};
     my $app = sub {
         my $env     = shift;
         my $req     = Nephia::Request->new($env);
-        my $context = Nephia::Context->new(req => $req, config => {%config});
+        my $context = Nephia::Context->new(req => $req, config => $self->{config});
         $self->_load_dsl($context);
         my $res;
         for my $action ($self->{action_chain}->as_array) {
