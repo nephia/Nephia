@@ -35,12 +35,6 @@ sub export_dsl {
         my $app = shift;
         $self->{app} = $app;
     };
-    *{$class.'::bootstrap'} = sub {
-        my $subclass = shift;
-        my $context = Nephia::Context->new(config => {@_});
-        $self->_load_dsl($context, $subclass);
-        $self;
-    };
 }
 
 sub _load_plugins {
@@ -106,8 +100,8 @@ sub dsl {
 }
 
 sub _load_dsl {
-    my ($self, $context, $caller) = @_;
-    my $class = $caller || $self->caller_class;
+    my ($self, $context) = @_;
+    my $class = $self->caller_class;
     no strict   qw/refs subs/;
     no warnings qw/redefine/;
     for my $plugin ( $self->loaded_plugins->as_array ) {
