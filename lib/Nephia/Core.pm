@@ -93,7 +93,7 @@ sub builder_chain {
 
 sub _action {
     my ($self, $context) = @_;
-    $context->set(res => $self->app->($context));
+    $context->set(res => $self->app->($self, $context));
     return $context;
 }
 

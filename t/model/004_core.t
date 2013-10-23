@@ -8,7 +8,7 @@ my $env = mock_env;
 
 my $app = sub {
     my ($self, $context) = @_;
-    [200, ['Content-Type' => 'text/plain'], 'Hello, World!'];
+    [200, ['Content-Type' => 'text/plain'], [sprintf('Hello, World! %s %s', ref($self), ref($context))]];
 };
 
 subtest normal => sub {
@@ -35,7 +35,7 @@ subtest normal => sub {
     isa_ok $v->run, 'CODE';
     my $res = $v->run->($env);
     isa_ok $res, 'ARRAY';
-    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, World!']];
+    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, World! Nephia::Core Nephia::Context']];
 };
 
 subtest caller_class => sub {
@@ -90,7 +90,7 @@ subtest load_plugin_with_builder_chain => sub {
     isa_ok $v, 'Nephia::Core';
     is_deeply [ map {ref($_)} $v->loaded_plugins->as_array ], [qw[Nephia::Plugin::Basic Nephia::Plugin::Cookie Nephia::Plugin::Test2]], 'plugins';
     my $res = $v->run->($env);
-    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, MyHome!']];
+    is_deeply $res, [200, ['Content-Type' => 'text/plain'], ['Hello, MyHome! Nephia::Core Nephia::Context']];
 };
 
 subtest with_conf => sub {
