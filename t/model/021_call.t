@@ -7,8 +7,6 @@ use Nephia::Context;
 use t::Util 'mock_env';
 
 my $env = mock_env;
-my $req = Nephia::Request->new($env);
-my $context = Nephia::Context->new(req => $req, config => {});
 
 {
     package 
@@ -33,13 +31,17 @@ my $context = Nephia::Context->new(req => $req, config => {});
 subtest normal => sub {
     my $v = Nephia::Core->new(caller => 'MyApp');
     my $code = $v->call('C::Root#index');
-    is_deeply( $code->($context), [200, [], ['name = ytnobody']] );
+    $v->app($code);
+    my $app = $v->run;
+    is_deeply( $app->($env), [200, [], ['name = ytnobody']] );
 };
 
 subtest absolute => sub {
     my $v = Nephia::Core->new(caller => 'MyApp');
     my $code = $v->call('+Oreore::App::Root#index');
-    is_deeply( $code->($context), [200, [], ['ytnobody is cool']] );
+    $v->app($code);
+    my $app = $v->run;
+    is_deeply( $app->($env), [200, [], ['ytnobody is cool']] );
 };
 
 done_testing;
