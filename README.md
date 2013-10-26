@@ -1,6 +1,6 @@
 # NAME
 
-Nephia - A mini-sized WAF that aimed to substitute for Nephia
+Nephia - A microcore architecture WAF
 
 # SYNOPSIS
 

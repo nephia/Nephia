@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Nephia::Incognito;
 
-our $VERSION = "0.84";
+our $VERSION = "0.85";
 
 sub import {
     my ($class, %opts) = @_;
@@ -30,7 +30,7 @@ __END__
 
 =head1 NAME
 
-Nephia - A mini-sized WAF that aimed to substitute for Nephia
+Nephia - A microcore architecture WAF
 
 =head1 SYNOPSIS
 

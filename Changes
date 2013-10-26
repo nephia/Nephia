@@ -2,6 +2,10 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.85 2013-10-26T02:13:54Z
+    - bug fix : fix arguments for controller logic, ( ${ref of Nephia::Core}, ${ref of Nephia::Context} ) is legal.
+                ( Nephia::Core object was not passed. )
+
 0.84 2013-10-21T17:07:04Z
     - feature : add call method and Nephia::Container
 
