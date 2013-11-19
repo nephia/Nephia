@@ -424,7 +424,7 @@ Extract an archive-file into specified path.
 Example.
 
     # extract ./somearch-0.1.2.tar.gz into ./MyApp-Web/static/foo/
-    $setup->assets_archive(
+    $setup->extract_archive(
         './somearch-0.1.2.tar.gz',
         qw/static foo/
     );
