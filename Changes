@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.87 2014-01-02T19:21:55Z
+    - bug fix: fix for crashing on multi-process situation
+
 0.86 2013-11-20T02:37:21Z
     - feature : [Setup.pm] split extract_archive from assets_archive
 
