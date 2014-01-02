@@ -2,6 +2,9 @@ Revision history for Perl extension Nephia
 
 {{$NEXT}}
 
+0.86 2013-11-20T02:37:21Z
+    - feature : [Setup.pm] split extract_archive from assets_archive
+
 0.85 2013-10-26T02:13:54Z
     - bug fix : fix arguments for controller logic, ( ${ref of Nephia::Core}, ${ref of Nephia::Context} ) is legal.
                 ( Nephia::Core object was not passed. )

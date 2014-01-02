@@ -237,6 +237,20 @@ sub assets {
     }
 }
 
+sub extract_archive {
+    my ($self, $archive_file, @extract_to) = @_;
+    my $path = File::Spec->catdir($self->approot, @extract_to);
+
+    $self->makepath(@extract_to);
+
+    $self->diag('Extract Archive %s into %s', $archive_file, $path);
+    my $archive = Archive::Extract->new(archive => $archive_file);
+    $archive->extract(to => $path);
+
+    $self->diag('Cleanup Archive %s', $archive_file);
+    unlink $archive_file;
+}
+
 sub assets_archive {
     my ($self, $url, @in_path) = @_;
     my $path = File::Spec->catdir($self->approot, @in_path);
@@ -247,14 +261,7 @@ sub assets_archive {
         $self->assets( $url, $filename );
         my $archive_file = File::Spec->catfile($self->approot, $filename);
 
-        $self->makepath( @in_path );
-
-        $self->diag('Extract Archive %s into %s', $archive_file, $path);
-        my $archive = Archive::Extract->new(archive => $archive_file);
-        $archive->extract(to => $path);
-
-        $self->diag('Cleanup Archive %s', $archive_file);
-        unlink $archive_file;
+        $self->extract_archive( $archive_file, @in_path );
     }
 }
 
@@ -407,6 +414,18 @@ Example.
     # download somearch-0.1.2.tar.gz and extract into ./MyApp-Web/static/foo/
     $setup->assets_archive(
         'ftp://example.com/files/somearch-0.1.2.tar.gz',
+        qw/static foo/
+    );
+
+=head2 extract_archive
+
+Extract an archive-file into specified path.
+
+Example.
+
+    # extract ./somearch-0.1.2.tar.gz into ./MyApp-Web/static/foo/
+    $setup->extract_archive(
+        './somearch-0.1.2.tar.gz',
         qw/static foo/
     );
 
