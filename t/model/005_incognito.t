@@ -6,7 +6,7 @@ use t::Util 'mock_env';
 
 is(
     Nephia::Incognito->_incognito_namespace('Foo'), 
-    'Nephia::Incognito::Foo::'.$$, 
+    'Nephia::Incognito::Foo', 
     'incognito namespace'
 );
 

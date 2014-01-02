@@ -24,7 +24,7 @@ sub unmask {
 
 sub _incognito_namespace { 
     my ($class, $appname) = @_;
-    'Nephia::Incognito::'.$appname.'::'. $$
+    'Nephia::Incognito::'.$appname;
 } 
 
 1;
